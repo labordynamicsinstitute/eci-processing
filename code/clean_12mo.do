@@ -1,6 +1,6 @@
 *prep 12 month data for analysis
 
-use "${mod_data}\fseries_12month.dta", clear
+use "${mod_data}/fseries_12month.dta", clear
 
 
 *define recession periods (https://www.nber.org/cycles.html)
@@ -21,4 +21,4 @@ label var value "ECI"
 sort id year
 
 
-save "${clean_data}\fseries_12month.dta", replace
+save "${clean_data}/fseries_12month.dta", replace

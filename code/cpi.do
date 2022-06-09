@@ -1,6 +1,6 @@
 *Import and prepare cpi data (series = CUUR0000SA0, CPI for All Urban Consumers (CPI-U))
 
-import excel "${raw_data}\bls_cpi.xlsx", sheet("modified") firstrow case(lower) clear
+import excel "${raw_data}/bls_cpi.xlsx", sheet("modified") firstrow case(lower) clear
 
 *prepare for reshape
 keep year q*
@@ -24,7 +24,7 @@ order time
 gen cpi_12mo = (cpi - cpi[_n-4])/(cpi[_n-4])*100
 
 
-save "${mod_data}\cpi.dta", replace
+save "${mod_data}/cpi.dta", replace
 
 
 *make series style data
@@ -35,6 +35,6 @@ gen series_title = "CPI, 12-month change"
 gen owner_code = 999
 rename cpi value
 order series_title id time value owner_code
-save "${mod_data}\cpi_series.dta", replace
+save "${mod_data}/cpi_series.dta", replace
 
 

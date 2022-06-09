@@ -1,6 +1,6 @@
 *Analysis of 12 month change ECI data
 
-use  "${clean_data}\fseries_12month.dta", clear
+use  "${clean_data}/fseries_12month.dta", clear
 
 ***define recession graph commands
 local all_shade bgshade time,shaders(recession) sstyle(lwidth(1.15) lcolor(gs14)) legend
@@ -24,11 +24,11 @@ preserve
 	replace marker2="" if time<${max_time}
 	twoway   (line upper time if inrange(time, 164, 167), recast(area) color(gs14)) (line upper time if inrange(time, 191, 197), recast(area) color(gs14)) (line upper time if inrange(time, 239, 242), recast(area) color(gs14)) (line value time, lcolor(maroon)) (scatter value time, mlabcolor(black) msym(none) mlabel(marker2) mlabsize(small) mlabangle(0) mlabposition(3) mlabgap(0)) (scatter value time, mlabcolor(black) msym(none) mlabel(marker) mlabsize(tiny) mlabangle(90) mlabposition(12) mlabgap(*3) xlab(164(4)${max_time},labsize(small) angle(45)) yscale(range(0 4.5)) yla(0 (1) 4.5) xtitle("") ytitle("Percent Change (%)") title("Employment Cost Index for Total Compensation") subtitle("All Civilian Workers, 12-month Percent Change") legend(order(4 2) label(2 "Recession") label(3 "ECI")) note("Institute for Compensation Studies at Cornell University" "Source: U.S. Bureau of Labor Statistics’ 12-month Employment Cost Index"))
 	sleep 5000
-	gr export "${output}\eci_total_comp_allciv_wnotes.pdf", replace
+	gr export "${output}/eci_total_comp_allciv_wnotes.pdf", replace
 	twoway   (line upper time if inrange(time, 164, 167), recast(area) color(gs14)) (line upper time if inrange(time, 191, 197), recast(area) color(gs14)) (line upper time if inrange(time, 239, 242), recast(area) color(gs14)) (line value time, lcolor(maroon)) (scatter value time, mlabcolor(black) msym(none) mlabel(marker2) mlabsize(small) mlabangle(0) mlabposition(3) mlabgap(0)) (scatter value time, mlabcolor(black) msym(none) mlabel(marker) mlabsize(tiny) mlabangle(90) mlabposition(12) mlabgap(*3) xlab(164(4)${max_time},labsize(small) angle(45)) yscale(range(0 4.5)) yla(0 (1) 4.5) xtitle("") ytitle("Percent Change (%)") title("Employment Cost Index for Total Compensation") subtitle("All Civilian Workers, 12-month Percent Change") legend(order(4 2) label(2 "Recession") label(3 "ECI")))
 	sleep 5000
-	gr export "${output}\eci_total_comp_allciv_nonotes.pdf", replace
-	export excel id series_title time value using "${output}\eci_total_comp_allciv.xls",  firstrow(varlabels) replace
+	gr export "${output}/eci_total_comp_allciv_nonotes.pdf", replace
+	export excel id series_title time value using "${output}/eci_total_comp_allciv.xls",  firstrow(varlabels) replace
 	restore
 	
 
@@ -38,22 +38,22 @@ preserve
 preserve
 	keep if id==${id_tc}	
 	label var value "Total Compensation"
-	export excel time value using "${output}\eci_breakdown_all_civ.xls", sheet("breakdown") cell(A1) firstrow(varlabels) replace
+	export excel time value using "${output}/eci_breakdown_all_civ.xls", sheet("breakdown") cell(A1) firstrow(varlabels) replace
 	restore
 preserve
 	keep if id==${id_ws}
 	label var value "Wages and Salaries"
-	export excel value using "${output}\eci_breakdown_all_civ.xls", sheet("breakdown") sheetmodify cell(C1) firstrow(varlabels)
+	export excel value using "${output}/eci_breakdown_all_civ.xls", sheet("breakdown") sheetmodify cell(C1) firstrow(varlabels)
 	restore
 preserve
 	keep if id==${id_tb}
 	label var value "Total Benefits"
-	export excel value using "${output}\eci_breakdown_all_civ.xls", sheet("breakdown") sheetmodify cell(D1) firstrow(varlabels)
+	export excel value using "${output}/eci_breakdown_all_civ.xls", sheet("breakdown") sheetmodify cell(D1) firstrow(varlabels)
 	restore
 preserve
-	use "${mod_data}\health_series.dta", clear
+	use "${mod_data}/health_series.dta", clear
 	label var value "Health Benefits"
-	export excel value using "${output}\eci_breakdown_all_civ.xls", sheet("breakdown") sheetmodify cell(E1) firstrow(varlabels)
+	export excel value using "${output}/eci_breakdown_all_civ.xls", sheet("breakdown") sheetmodify cell(E1) firstrow(varlabels)
 	restore	
 
 	
@@ -78,7 +78,7 @@ preserve
 	*twoway (area upper time, color(gs14) ) (tsline value if occ==0) (tsline value if occ==112900) (tsline value if occ==313900) (tsline value if occ==414300) (tsline value if occ== 454900) (tsline value if occ==515300,  xlab(164(4)${max_time},labsize(small) angle(45)) xtitle("") ytitle("Percent Change (%)") title("Employment Cost Index for Total Compensation") subtitle("All Private Workers, 12-month Percent Change") legend(label(2 "All Workers") label(3 "Mgmt., Prof.,  Related") label(4 "Service") label(5 "Sales and Office") label(6 "Nat. Res., Constr., Maint.") label(7 "Prod., Trans., Mat. Moving")	size(vsmall) col(3) order( 2 3 4 5 6 7)))
 	*xtline value,t(time) i(occ) overlay  xlab(164(4)${max_time},labsize(small) angle(45)) xtitle("") ytitle("Percent Change (%)") title("Employment Cost Index for Total Compensation") subtitle("All Private Workers, 12-month Percent Change") legend(size(vsmall) col(3) order(1 2 3 4 5 6)) addplot((line upper time if inrange(time, 164, 167), recast(area) color(gs14)) (line upper time if inrange(time, 191, 197), recast(area) color(gs14)) (line upper time if inrange(time, 240, ${max_time}), recast(area) color(gs14) below))
 	*sleep 5000
-	gr export "${output}\eci_total_comp_allprivate.pdf", replace
+	gr export "${output}/eci_total_comp_allprivate.pdf", replace
 	keep time value occ
 	reshape wide value, i(time) j(occ) 
 	local i=1
@@ -86,7 +86,7 @@ preserve
 		label var `y' "`ylbl_`i''"
 		local i=`i'+1
 		}
-	export excel  using "${output}\eci_total_comp_allprivate.xls",  firstrow(varlabels) replace
+	export excel  using "${output}/eci_total_comp_allprivate.xls",  firstrow(varlabels) replace
 	restore
 	
 
@@ -106,7 +106,7 @@ preserve
 	*twoway (area upper time, color(gs14) ) (tsline value if occ==0) (tsline value if occ==112900) (tsline value if occ==313900) (tsline value if occ==414300) (tsline value if occ== 454900) (tsline value if occ==515300,  xlab(164(4)${max_time},labsize(small) angle(45)) xtitle("") ytitle("Percent Change (%)") title("Employment Cost Index for Wages and Salaries") subtitle("All Private Workers, 12-month Percent Change") legend(label(2 "All Workers") label(3 "Mgmt., Prof.,  Related") label(4 "Service") label(5 "Sales and Office") label(6 "Nat. Res., Constr., Maint.") label(7 "Prod., Trans., Mat. Moving")	size(vsmall) col(3) order( 2 3 4 5 6 7)))
 	*xtline value,t(time) i(occ) overlay  xlab(164(4)${max_time},labsize(small) angle(45)) xtitle("") ytitle("Percent Change (%)") title("Employment Cost Index for Wages and Salaries") subtitle("All Private Workers, 12-month Percent Change") legend( size(vsmall) col(3) order(1 2 3 4 5 6)) addplot((line upper time if inrange(time, 164, 167), recast(area) color(gs14)) (line upper time if inrange(time, 191, 197), recast(area) color(gs14)) (line upper time if inrange(time, 240, ${max_time}), recast(area) color(gs14) below))
 	*sleep 5000
-	gr export "${output}\eci_ws_allprivate.pdf", replace
+	gr export "${output}/eci_ws_allprivate.pdf", replace
 	keep time value occ
 	reshape wide value, i(time) j(occ) 
 	label var value0 "All Workers"
@@ -115,7 +115,7 @@ preserve
 	label var value414300 "Sales and Office"
 	label var value454900 "Nat. Res., Constr., Maint." 
 	label var value515300 "Prod., Trans., Mat. Moving"
-	export excel  using "${output}\eci_ws_allprivate.xls",  firstrow(varlabels) replace
+	export excel  using "${output}/eci_ws_allprivate.xls",  firstrow(varlabels) replace
 	restore	
 	
 
@@ -136,14 +136,14 @@ preserve
 		label var `y' "`ylbl_`i''"
 		local i=`i'+1
 		}
-	export excel  using "${output}\eci_ws_allprivate_allocc.xls",  firstrow(varlabels) replace
+	export excel  using "${output}/eci_ws_allprivate_allocc.xls",  firstrow(varlabels) replace
 	restore		
 	
 *ECI for Total Compensation - by Class of Worker
 preserve
 	keep if area==99999 & estimate_code==1 & subcell==0 & ind==0 & occ==0
 	keep series_title id time value owner recession
-	append using "${mod_data}\cpi_series.dta"
+	append using "${mod_data}/cpi_series.dta"
 	label define owner2 1 "Civilian" 2 "Private" 3 "Public" 999 "CPI"
 	label values owner_code owner2
 	sum value
@@ -158,7 +158,7 @@ preserve
 *	twoway (area upper time, color(gs14) base(`vmin') ) (tsline value if owner==1) (tsline value if owner==2) (tsline value if owner==3) (tsline value if owner==999,  xlab(164(4)${max_time},labsize(small) angle(45)) xtitle("") ytitle("Percent Change (%)") title("Employment Cost Index for Total Compensation") subtitle("All Workers, 12-month Percent Change") legend(label(2 "Civilian") label(3 "Private") label(4 "Public") label(5 "CPI") 	size(vsmall) col(3) order( 2 3 4 5)))
 *	xtline value,t(time) i(owner) overlay  xlab(164(4)${max_time},labsize(small) angle(45)) xtitle("") ytitle("Percent Change (%)") title("Employment Cost Index for Total Compensation") subtitle("All Workers, 12-month Percent Change") legend(order(1 2 3 4) size(vsmall) col(4)) addplot((line upper time if inrange(time, 164, 167), recast(area) color(gs14) base(-2)) (line upper time if inrange(time, 191, 197), recast(area) color(gs14) base(-2)) (line upper time if inrange(time, 240, ${max_time}), recast(area) color(gs14) base(-2) below))
 *	sleep 5000
-	gr export "${output}\eci_tc_allworkers.pdf", replace
+	gr export "${output}/eci_tc_allworkers.pdf", replace
 	drop upper
 	sum value if time>=224
 	local vmax=r(max)
@@ -171,14 +171,14 @@ preserve
 *	twoway (area upper time if time>=224, color(gs14) base(`vmin') ) (tsline value if owner==1 & time>=224) (tsline value if owner==2 & time>=224) (tsline value if owner==3 & time>=224) (tsline value if owner==999  & time>=224,  xlab(224(4)${max_time},labsize(small) angle(45)) xtick(#11) xtitle("") ytitle("Percent Change (%)") title("Employment Cost Index for Total Compensation") subtitle("All Workers, 12-month Percent Change") legend(label(2 "Civilian") label(3 "Private") label(4 "Public") label(5 "CPI") 	size(vsmall) col(3) order( 2 3 4 5)))
 *	xtline value if time>=224,t(time) i(owner) overlay  xlab(224(4)${max_time},labsize(small) angle(45)) xtick(#11) xtitle("") ytitle("Percent Change (%)") title("Employment Cost Index for Total Compensation") subtitle("All Workers, 12-month Percent Change") legend(order(1 2 3 4) size(vsmall) col(4)) addplot((line upper time if inrange(time, 240, ${max_time}), recast(area) color(gs14) below))
 *	sleep 5000
-	gr export "${output}\eci_tc_allworkers_recent.pdf", replace
+	gr export "${output}/eci_tc_allworkers_recent.pdf", replace
 	keep time value owner
 	reshape wide value, i(time) j(owner) 
 	label var value1 "Civilian"
 	label var value2 "Private"
 	label var value3 "Public"
 	label var value999 "CPI"
-	export excel  using "${output}\eci_tc_allworkers.xls",  firstrow(varlabels) replace
+	export excel  using "${output}/eci_tc_allworkers.xls",  firstrow(varlabels) replace
 	restore	
 
 
@@ -186,7 +186,7 @@ preserve
 preserve
 	keep if area==99999 & estimate_code==3 & subcell==0 & ind==0 & occ==0
 	keep series_title id time value owner recession
-	append using "${mod_data}\cpi_series.dta"
+	append using "${mod_data}/cpi_series.dta"
 	label define owner2 1 "Civilian" 2 "Private" 3 "Public" 999 "CPI"
 	label values owner_code owner2
 	sum value
@@ -201,7 +201,7 @@ preserve
 *	twoway (area upper time, color(gs14) base(`vmin') ) (tsline value if owner==1) (tsline value if owner==2) (tsline value if owner==3) (tsline value if owner==999,  xlab(164(4)${max_time},labsize(small) angle(45)) xtitle("") ytitle("Percent Change (%)") title("Employment Cost Index for Total Benefits") subtitle("All Workers, 12-month Percent Change") legend(label(2 "Civilian") label(3 "Private") label(4 "Public") label(5 "CPI") 	size(vsmall) col(3) order( 2 3 4 5)))
 *	xtline value,t(time) i(owner) overlay  xlab(164(4)${max_time},labsize(small) angle(45)) xtitle("") ytitle("Percent Change (%)") title("Employment Cost Index for Total Benefits") subtitle("All Workers, 12-month Percent Change") legend(order(1 2 3 4) size(vsmall) col(4)) addplot((line upper time if inrange(time, 164, 167), recast(area) color(gs14) base(-2)) (line upper time if inrange(time, 191, 197), recast(area) color(gs14) base(-2)) (line upper time if inrange(time, 240, ${max_time}), recast(area) color(gs14) base(-2) below))
 *	sleep 5000
-	gr export "${output}\eci_tb_allworkers.pdf", replace
+	gr export "${output}/eci_tb_allworkers.pdf", replace
 	drop upper
 	sum value if time>=224
 	local vmax=r(max)
@@ -214,14 +214,14 @@ preserve
 *	twoway (area upper time if time>=224, color(gs14) base(`vmin') ) (tsline value if owner==1 & time>=224) (tsline value if owner==2 & time>=224) (tsline value if owner==3 & time>=224) (tsline value if owner==999  & time>=224,  xlab(224(4)${max_time},labsize(small) angle(45)) xtick(#11) xtitle("") ytitle("Percent Change (%)")  title("Employment Cost Index for Total Benefits") subtitle("All Workers, 12-month Percent Change") legend(label(2 "Civilian") label(3 "Private") label(4 "Public") label(5 "CPI") 	size(vsmall) col(3) order( 2 3 4 5)))
 *	xtline value if time>=224,t(time) i(owner) overlay  xlab(224(4)${max_time},labsize(small) angle(45)) xtick(#11) xtitle("") ytitle("Percent Change (%)") title("Employment Cost Index for Total Benefits") subtitle("All Workers, 12-month Percent Change") legend(order(1 2 3 4) size(vsmall) col(4)) addplot((line upper time if inrange(time, 240, ${max_time}), recast(area) color(gs14) base(-2) below))
 *	sleep 5000
-	gr export "${output}\eci_tb_allworkers_recent.pdf", replace
+	gr export "${output}/eci_tb_allworkers_recent.pdf", replace
 	keep time value owner
 	reshape wide value, i(time) j(owner) 
 	label var value1 "Civilian"
 	label var value2 "Private"
 	label var value3 "Public"
 	label var value999 "CPI"
-	export excel  using "${output}\eci_tb_allworkers.xls",  firstrow(varlabels) replace
+	export excel  using "${output}/eci_tb_allworkers.xls",  firstrow(varlabels) replace
 	restore	
 
 
@@ -243,7 +243,7 @@ preserve
 *	twoway (area upper time if time>=184, color(gs14) base(`vmin') ) (tsline value if area==99100 & time>=184) (tsline value if area==99120 & time>=184) (tsline value if area==99130 & time>=184) (tsline value if area==99140 & time>=184) (tsline value if area==99150 & time>=184) (tsline value if area==99160 & time>=184) (tsline value if area==99170 & time>=184) (tsline value if area==99180 & time>=184) (tsline value if area==99190 & time>=184,  xlab(184(4)${max_time},labsize(small) angle(45)) xtitle("") ytitle("Percent Change (%)") title("Employment Cost Index for Total Compensation") subtitle("Private Workers, 12-month Percent Change") legend(label(2 "New England") label(3 "Middle Atlantic") label(4 "East South Central") label(5 "South Atlantic") label(6 "East North Central") label(7 "West North Central") label(8 "West South Central") label(9 "Mountain") label(10 "Pacific") 	size(vsmall) col(3) order( 2 3 4 5 6 7 8 9 10)))
 *	xtline value if time>=224,t(time) i(area) overlay  xlab(224(4)${max_time},labsize(small) angle(45)) xtick(#11) xtitle("") ytitle("Percent Change (%)") title("Employment Cost Index for Total Compensation") subtitle("Private Workers, 12-month Percent Change") legend(size(vsmall) col(3) order(1 2 3 4 5 6 7 8 9)) addplot((line upper time if inrange(time, 240, ${max_time}), recast(area) color(gs14) base(-2) below))
 *	sleep 5000
-	gr export "${output}\eci_tc_regions.pdf", replace
+	gr export "${output}/eci_tc_regions.pdf", replace
 	tab area, gen(xarea_)
 	forvalues i=1(1)9 {
 		local x1: variable label xarea_`i'
@@ -256,5 +256,5 @@ preserve
 		label var `y' "`ylbl_`i''"
 		local i=`i'+1
 		}
-	export excel  using "${output}\eci_tc_regions.xls",  firstrow(varlabels) replace
+	export excel  using "${output}/eci_tc_regions.xls",  firstrow(varlabels) replace
 	restore	

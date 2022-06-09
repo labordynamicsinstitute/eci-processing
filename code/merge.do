@@ -1,10 +1,10 @@
 *Merge data files with alldata file
 
 *start with all data file
-use "${raw_data}\falldata.dta", clear
+use "${raw_data}/falldata.dta", clear
 
 *merge series file
-	merge m:1 series_id using "${raw_data}\fseries.dta"
+	merge m:1 series_id using "${raw_data}/fseries.dta"
 	*confirm everything merged properly
 		gen temp1=_merge==1
 		gen temp2=_merge==2
@@ -182,7 +182,7 @@ global id_tb = 423 // previously 267
 
 /*
 *bring in cpi data
-merge m:1 time using "${mod_data}\cpi.dta"
+merge m:1 time using "${mod_data}/cpi.dta"
 keep if _merge==3
 drop _merge
 */
@@ -194,11 +194,11 @@ order series_title series_id id time  year period value  seasonal owner_code  in
 *make a seasonally adjusted index file
 preserve
 	keep if seasonal=="S"
-	save "${mod_data}\fseries_seasonal_index.dta", replace
+	save "${mod_data}/fseries_seasonal_index.dta", replace
 	restore
 
 *make a 12-month change file
 preserve
 	keep if periodicity_code==1
-	save "${mod_data}\fseries_12month.dta", replace
+	save "${mod_data}/fseries_12month.dta", replace
 	restore
