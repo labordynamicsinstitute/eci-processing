@@ -7,7 +7,8 @@ capture log close
 *Directory setup
 cd ..
 global rootdir : pwd
-global datadir "${rootdir}/"
+di "rootdir: $rootdir"
+global datadir "${rootdir}/data"
 global outputs "${rootdir}/Analysis"
 
 global raw_data "${datadir}/raw"
@@ -19,7 +20,7 @@ global do_files "${rootdir}/code"
 cd "$rootdir"
 
 foreach dir in datadir outputs raw_data mod_data clean_data output log {
-	cap mkdir `dir'
+	cap mkdir $`dir'
 }
 
 
@@ -32,8 +33,22 @@ log using "${log}/ecec_`timestamp'.log", replace text
 	- I have to manually add 1 to "global cpi_max_time" for each new Q's of data (on 1/31/20 I increased to 239. on 10/29/21 i increased to 246. on 01/28/22 I increased to 247
 */
 
+
 *Specify globals used in command files
 global max_time=247
+
+/* verify if "set_key.do" is there */
+
+capture confirm file set_key.do
+if _rc == 0 {
+    run set_key.do
+	set fredkey $FREDKEY
+}
+else { 
+    di in red "set_key.do not found - FRED pull will not work"
+	exit, STATA
+} 
+
 
 
 
@@ -50,7 +65,7 @@ global do_analysis_12mo = 1
 
 *Execute do files
 if ${do_import}==1 					do "${do_files}/import.do"
-if ${do_cpi}==1 					do "${do_files}/cpi.do"
+if ${do_cpi}==1 					do "${do_files}/cpi_fred.do"
 if ${do_merge}==1 					do "${do_files}/merge.do"
 if ${do_clean_12mo}==1 				do "${do_files}/clean_12mo.do"
 if ${do_analysis_12mo}==1 			do "${do_files}/analysis_12mo.do"

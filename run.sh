@@ -65,6 +65,7 @@ time docker run $DOCKEROPTS \
   -v ${STATALIC}:/usr/local/stata/stata.lic \
   -v $(pwd)/${codedir}:/code \
   -v $(pwd)/data:/data \
+  -w /code \
   $DOCKERIMG:$TAG -b $basefile
 
 # print and check logfile
