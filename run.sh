@@ -21,7 +21,7 @@ else
 fi
 
 # name of the file to run
-file=code/main.do
+file=code/process_all.do
 
 
 echo "================================"

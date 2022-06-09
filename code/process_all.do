@@ -5,17 +5,27 @@ clear all
 capture log close
 
 *Directory setup
-global raw_data "C:/Users/he76/Documents/ICS/Research/ECI/Data/raw"
-global mod_data "C:/Users/he76/Documents/ICS/Research/ECI/Data/modified"
-global clean_data "C:/Users/he76/Documents/ICS/Research/ECI/Data/clean"
-global output "C:/Users/he76/Documents/ICS/Research/ECI/Analysis/Output"
-global log "C:/Users/he76/Documents/ICS/Research/ECI/Analysis/Log_Files"
-global do_files "C:/Users/he76/Documents/ICS/Research/ECI/Analysis/Do_Files"
+cd ..
+global rootdir : pwd
+global datadir "${rootdir}/"
+global outputs "${rootdir}/Analysis"
+
+global raw_data "${datadir}/raw"
+global mod_data "${datadir}/modified"
+global clean_data "${datadir}/clean"
+global output "${outputs}/Output"
+global log "${outputs}/Log_Files"
+global do_files "${rootdir}/code"
+cd "$rootdir"
+
+foreach dir in datadir outputs raw_data mod_data clean_data output log {
+	cap mkdir `dir'
+}
 
 
 *Log setup
 local timestamp=subinstr(string(date(c(current_date), "DMY"), "%tdCCYY_NN_DD")," ","_",2)
-log using "${log}/ecec_`timestamp'.log", replace
+log using "${log}/ecec_`timestamp'.log", replace text
 
 /*Notes:
 	- I have to manually update the raw/bls_cpi.xlsx file with current Q data
