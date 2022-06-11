@@ -7,6 +7,8 @@ capture log close
 *Directory setup
 cd ..
 global rootdir : pwd
+* safety for Docker
+if "$rootdir" == "" global rootdir "/"
 di "rootdir: $rootdir"
 global datadir "${rootdir}/data"
 global outputs "${rootdir}/Analysis"
