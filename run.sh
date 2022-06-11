@@ -51,7 +51,8 @@ DOCKERIMG=$MYHUBID/$MYIMG
 
 # ensure that the directories are writable by Docker
 chmod a+rwX code code/*
-chmod a+rwX data 
+chmod -R a+rwX data 
+chmod a+rwX .
 
 # a few names
 basefile=$(basename $file)

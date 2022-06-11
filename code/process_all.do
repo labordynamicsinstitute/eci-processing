@@ -20,6 +20,7 @@ global output "${outputs}/Output"
 global log "${outputs}/Log_Files"
 global do_files "${rootdir}/code"
 cd "$rootdir"
+ls
 
 foreach dir in datadir outputs raw_data mod_data clean_data output log {
 	cap mkdir "${`dir'}"
