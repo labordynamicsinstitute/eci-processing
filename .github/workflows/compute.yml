@@ -21,7 +21,7 @@ jobs:
       # Workaround - we create a local key file
       - name: Create FRED keyfile
         run: |
-            echo "global FREDKEY '${{ secrets.R_FREDKEY }}'" > set_key.do
+            echo "global FREDKEY \"${{ secrets.R_FREDKEY }}\"" > set_key.do
             ls -l set_key.do
       # we want a lower-case version of the repo name
       - name: Sanitize repo slug
