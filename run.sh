@@ -21,7 +21,7 @@ else
 fi
 
 # name of the file to run
-file=code/main.do
+file=code/process_all.do
 
 
 echo "================================"
@@ -51,7 +51,8 @@ DOCKERIMG=$MYHUBID/$MYIMG
 
 # ensure that the directories are writable by Docker
 chmod a+rwX code code/*
-chmod a+rwX data 
+chmod -R a+rwX data 
+chmod a+rwX .
 
 # a few names
 basefile=$(basename $file)
@@ -63,8 +64,8 @@ logfile=${file%*.do}.log
 
 time docker run $DOCKEROPTS \
   -v ${STATALIC}:/usr/local/stata/stata.lic \
-  -v $(pwd)/${codedir}:/code \
-  -v $(pwd)/data:/data \
+  -v $(pwd):/project \
+  -w /project/code \
   $DOCKERIMG:$TAG -b $basefile
 
 # print and check logfile

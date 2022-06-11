@@ -1,23 +1,24 @@
 *Import and prepare cpi data (series = CUUR0000SA0, CPI for All Urban Consumers (CPI-U))
+* FRED: CPIAUCSL = seasonally adjusted
+* FRED: CPIAUCNS = not seasonally adjusted
 
-import excel "${raw_data}/bls_cpi.xlsx", sheet("modified") firstrow case(lower) clear
+global CPIVAR "CPIAUCNS"
+import fred $CPIVAR
 
-*prepare for reshape
-keep year q*
-forvalues i=1(1)4 {
-	rename q`i' cpi_`i'
-	}
-reshape long cpi_, i(year) j(qtr)
-rename cpi_ cpi
-
-*set date format
-tostring year, gen(z1)
-tostring qtr, gen(z2)
+* convert to quarterly
+gen z1 = year(daten)
+tostring z1, replace
+gen z2 = int(month(daten)/4)+1
+tostring z2, replace
 gen yq =z1+"Q"+z2
 gen time = quarterly(yq, "YQ")
 format time %tq
-drop yq z1 z2 year qtr
+drop yq z1 z2 
 order time
+sort time
+
+* summarize to quarterly level
+collapse (mean) cpi = $CPIVAR, by(time)
 
 
 *make 12 month percent change cpi measure

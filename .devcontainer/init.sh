@@ -7,6 +7,7 @@
         exit 2
     else
         echo "${STATA_LIC_BASE64}" | base64 -d > stata.lic 
+        echo "global FREDKEY '${{ secrets.R_FREDKEY }}'" > set_key.do 
     fi
 fi
 #docker buildx install

@@ -1,10 +1,10 @@
 *Merge data files with alldata file
 
 *start with all data file
-use "${raw_data}\falldata.dta", clear
+use "${raw_data}/falldata.dta", clear
 
 *merge series file
-	merge m:1 series_id using "${raw_data}\fseries.dta"
+	merge m:1 series_id using "${raw_data}/fseries.dta"
 	*confirm everything merged properly
 		gen temp1=_merge==1
 		gen temp2=_merge==2
@@ -172,17 +172,26 @@ egen id=group(series_id)
 xtset id time
 
 *confirm that core series maintain the same ID value over data releases
-assert series_title=="Total compensation for All Civilian workers in All industries and occupations, 12-month percent change" if id==147
-global id_tc = 147
-assert series_title=="Wages and salaries for All Civilian workers in All industries and occupations, 12-month percent change" if id==285
-global id_ws = 285 // previously 207
-assert series_title=="Total benefits for All Civilian workers in All industries and occupations, 12-month percent change" if id==423
-global id_tb = 423 // previously 267
-
+* assert series_title=="Total compensation for All Civilian workers in All industries and occupations, 12-month percent change" if id==147
+preserve
+keep if series_id=="CIU1010000000000A"
+qui sum id
+global id_tc = r(max) // was 147
+*assert series_title=="Wages and salaries for All Civilian workers in All industries and occupations, 12-month percent change" if id==285
+restore, preserve
+keep if series_id=="CIU1020000000000A"
+qui sum id
+global id_ws = r(max)
+* assert series_title=="Total benefits for All Civilian workers in All industries and occupations, 12-month percent change" if id==423
+restore, preserve
+keep if series_id=="CIU1030000000000A"
+qui sum id
+global id_tb = r(max) // 423 // previously 267
+restore
 
 /*
 *bring in cpi data
-merge m:1 time using "${mod_data}\cpi.dta"
+merge m:1 time using "${mod_data}/cpi.dta"
 keep if _merge==3
 drop _merge
 */
@@ -194,11 +203,11 @@ order series_title series_id id time  year period value  seasonal owner_code  in
 *make a seasonally adjusted index file
 preserve
 	keep if seasonal=="S"
-	save "${mod_data}\fseries_seasonal_index.dta", replace
+	save "${mod_data}/fseries_seasonal_index.dta", replace
 	restore
 
 *make a 12-month change file
 preserve
 	keep if periodicity_code==1
-	save "${mod_data}\fseries_12month.dta", replace
+	save "${mod_data}/fseries_12month.dta", replace
 	restore
