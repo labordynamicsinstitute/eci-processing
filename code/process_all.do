@@ -20,7 +20,7 @@ global do_files "${rootdir}/code"
 cd "$rootdir"
 
 foreach dir in datadir outputs raw_data mod_data clean_data output log {
-	cap mkdir $`dir'
+	cap mkdir ${`dir'}
 }
 
 
