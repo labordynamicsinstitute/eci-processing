@@ -21,13 +21,9 @@ global log "${outputs}/Log_Files"
 global do_files "${rootdir}/code"
 cd "$rootdir"
 
-cap mkdir "$datadir"
-cap mkdir "$outputs"
-cap mkdir "$raw_data"
-cap mkdir "$mod_data"
-cap mkdir "$output"
-cap mkdir "$log"
-
+foreach dir in datadir outputs raw_data mod_data clean_data output log {
+	cap mkdir "${`dir'}"
+}
 
 
 *Log setup
