@@ -172,13 +172,22 @@ egen id=group(series_id)
 xtset id time
 
 *confirm that core series maintain the same ID value over data releases
-assert series_title=="Total compensation for All Civilian workers in All industries and occupations, 12-month percent change" if id==147
-global id_tc = 147
-assert series_title=="Wages and salaries for All Civilian workers in All industries and occupations, 12-month percent change" if id==285
-global id_ws = 285 // previously 207
-assert series_title=="Total benefits for All Civilian workers in All industries and occupations, 12-month percent change" if id==423
-global id_tb = 423 // previously 267
-
+* assert series_title=="Total compensation for All Civilian workers in All industries and occupations, 12-month percent change" if id==147
+preserve
+keep if series_id=="CIU1010000000000A"
+qui sum id
+global id_tc = r(max) // was 147
+*assert series_title=="Wages and salaries for All Civilian workers in All industries and occupations, 12-month percent change" if id==285
+restore, preserve
+keep if series_id=="CIU1020000000000A"
+qui sum id
+global id_ws = r(max)
+* assert series_title=="Total benefits for All Civilian workers in All industries and occupations, 12-month percent change" if id==423
+restore, preserve
+keep if series_id=="CIU1030000000000A"
+qui sum id
+global id_tb = r(max) // 423 // previously 267
+restore
 
 /*
 *bring in cpi data

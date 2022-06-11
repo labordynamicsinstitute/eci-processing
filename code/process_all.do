@@ -49,7 +49,8 @@ else {
 	exit, STATA
 } 
 
-
+* install required packages
+ssc install bgshade
 
 
 *Set sections of code to run with the following code (0 = don't run; 1 = run)
@@ -72,3 +73,4 @@ if ${do_analysis_12mo}==1 			do "${do_files}/analysis_12mo.do"
 
 log close
 
+exit, STATA
