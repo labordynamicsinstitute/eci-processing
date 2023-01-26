@@ -67,19 +67,19 @@ rootdir: /project
 . ls
 
 total 60
-drwxr-xr-x 2 1001 121 4096 Nov  2 17:15 assets/
--rwxr-xr-x 1 1001 121  956 Nov  2 17:15 build.sh*
-drwxrwxrwx 2 1001 121 4096 Nov  2 17:16 code/
--rw-r--r-- 1 1001 121  104 Nov  2 17:15 config.txt
-drwxrwxrwx 2 1001 121 4096 Nov  2 17:15 data/
--rw-r--r-- 1 1001 121  709 Nov  2 17:15 Dockerfile
--rw-r--r-- 1 1001 121  119 Nov  2 17:15 init.config.txt
--rw-r--r-- 1 1001 121 1690 Nov  2 17:15 LICENSE
--rw-r--r-- 1 1001 121 8329 Nov  2 17:15 README.md
--rwxr-xr-x 1 1001 121 1769 Nov  2 17:15 run.sh*
--rw-r--r-- 1 1001 121   50 Nov  2 17:15 set_key.do
--rw-r--r-- 1 1001 121  656 Nov  2 17:15 setup.do
--rw-r--r-- 1 1001 121  128 Nov  2 17:15 stata.lic
+drwxr-xr-x 2 1001 123 4096 Jan 26 20:45 assets/
+-rwxr-xr-x 1 1001 123  956 Jan 26 20:45 build.sh*
+drwxrwxrwx 2 1001 123 4096 Jan 26 20:46 code/
+-rw-r--r-- 1 1001 123  104 Jan 26 20:45 config.txt
+drwxrwxrwx 2 1001 123 4096 Jan 26 20:45 data/
+-rw-r--r-- 1 1001 123  709 Jan 26 20:45 Dockerfile
+-rw-r--r-- 1 1001 123  119 Jan 26 20:45 init.config.txt
+-rw-r--r-- 1 1001 123 1690 Jan 26 20:45 LICENSE
+-rw-r--r-- 1 1001 123 8329 Jan 26 20:45 README.md
+-rwxr-xr-x 1 1001 123 1769 Jan 26 20:45 run.sh*
+-rw-r--r-- 1 1001 123   50 Jan 26 20:45 set_key.do
+-rw-r--r-- 1 1001 123  656 Jan 26 20:45 setup.do
+-rw-r--r-- 1 1001 123  128 Jan 26 20:45 stata.lic
 
 . 
 . foreach dir in datadir outputs raw_data mod_data clean_data output log {
@@ -93,12 +93,12 @@ drwxrwxrwx 2 1001 121 4096 Nov  2 17:15 data/
 > )," ","_",2)
 
 . log using "${log}/ecec_`timestamp'.log", replace text
-(file /project/Analysis/Log_Files/ecec_2022_11_02.log not found)
+(file /project/Analysis/Log_Files/ecec_2023_01_26.log not found)
 -------------------------------------------------------------------------------
       name:  <unnamed>
-       log:  /project/Analysis/Log_Files/ecec_2022_11_02.log
+       log:  /project/Analysis/Log_Files/ecec_2023_01_26.log
   log type:  text
- opened on:   2 Nov 2022, 17:16:51
+ opened on:  26 Jan 2023, 20:46:30
 
 . 
 . /*Notes:
@@ -299,7 +299,7 @@ Summary
 -------------------------------------------------------------------------------
 Series ID                    Nobs    Date range                Frequency
 -------------------------------------------------------------------------------
-CPIAUCNS                     1317    1913-01-01 to 2022-09-01  Monthly
+CPIAUCNS                     1320    1913-01-01 to 2022-12-01  Monthly
 -------------------------------------------------------------------------------
 # of series imported: 1
    highest frequency: Monthly
@@ -349,7 +349,7 @@ file /project/data/modified/cpi.dta saved
 . 
 . *make series style data
 . keep if time>=164 & time<=${max_time}
-(355 observations deleted)
+(356 observations deleted)
 
 . keep time cpi_12mo
 
@@ -1773,9 +1773,9 @@ end of do-file
 . 
 . log close
       name:  <unnamed>
-       log:  /project/Analysis/Log_Files/ecec_2022_11_02.log
+       log:  /project/Analysis/Log_Files/ecec_2023_01_26.log
   log type:  text
- closed on:   2 Nov 2022, 17:17:28
+ closed on:  26 Jan 2023, 20:47:05
 -------------------------------------------------------------------------------
 
 . 

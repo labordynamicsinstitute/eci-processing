@@ -1,8 +1,8 @@
 -------------------------------------------------------------------------------
       name:  <unnamed>
-       log:  /project/Analysis/Log_Files/ecec_2022_11_02.log
+       log:  /project/Analysis/Log_Files/ecec_2023_01_26.log
   log type:  text
- opened on:   2 Nov 2022, 17:16:51
+ opened on:  26 Jan 2023, 20:46:30
 
 . 
 . /*Notes:
@@ -203,7 +203,7 @@ Summary
 -------------------------------------------------------------------------------
 Series ID                    Nobs    Date range                Frequency
 -------------------------------------------------------------------------------
-CPIAUCNS                     1317    1913-01-01 to 2022-09-01  Monthly
+CPIAUCNS                     1320    1913-01-01 to 2022-12-01  Monthly
 -------------------------------------------------------------------------------
 # of series imported: 1
    highest frequency: Monthly
@@ -253,7 +253,7 @@ file /project/data/modified/cpi.dta saved
 . 
 . *make series style data
 . keep if time>=164 & time<=${max_time}
-(355 observations deleted)
+(356 observations deleted)
 
 . keep time cpi_12mo
 
@@ -1677,7 +1677,7 @@ end of do-file
 . 
 . log close
       name:  <unnamed>
-       log:  /project/Analysis/Log_Files/ecec_2022_11_02.log
+       log:  /project/Analysis/Log_Files/ecec_2023_01_26.log
   log type:  text
- closed on:   2 Nov 2022, 17:17:28
+ closed on:  26 Jan 2023, 20:47:05
 -------------------------------------------------------------------------------
