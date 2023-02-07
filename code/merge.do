@@ -16,8 +16,9 @@ drop if periodicity_code=="Q"
 *Owner
 destring owner, replace
 capture confirm numeric variable owner
-if !_rc {
-        di in red "Problem with variable owner"
+if _rc != 0 {
+	    local rc=_rc
+        di in red "Problem with variable owner: `rc'"
 		tab owner
 		codebook owner
 		exit(2)
@@ -36,7 +37,7 @@ label values owner owner_lbl
 	replace industry_code="992000" if industry_code=="S00000"
 	destring industry_code, replace
 	capture confirm numeric variable industry_code
-if !_rc {
+if _rc != 0 {
 		local var "industry_code"
         di in red "Problem with variable `var'"
 		tab `var'
@@ -86,7 +87,7 @@ if !_rc {
 replace occupation_code="999999" if occupation_code=="DISCON"
 destring occupation_code, replace 
 capture confirm numeric variable occupation_code
-if !_rc {
+if _rc != 0 {
 		local var "occupation_code"
         di in red "Problem with variable `var'"
 		tab `var'
@@ -119,7 +120,7 @@ label values occupation_code occ_lbl
 *Subcell (only numeric values exist in data)
 destring subcell, replace
 capture confirm numeric variable subcell
-if !_rc {
+if _rc != 0 {
 		local var "subcell"
         di in red "Problem with variable `var'"
 		tab `var'
