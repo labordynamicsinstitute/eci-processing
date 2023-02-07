@@ -85,6 +85,8 @@ if _rc != 0 {
 
 *Occupation
 replace occupation_code="999999" if occupation_code=="DISCON"
+replace occupation_code="430009" if occupation_code=="43000D"
+replace occupation_code="530009" if occupation_code=="53000D"
 destring occupation_code, replace 
 capture confirm numeric variable occupation_code
 if _rc != 0 {
@@ -114,6 +116,9 @@ label define occ_lbl 510000 `"Production occupations"', add
 label define occ_lbl 515300 `"Production, transportation, and material moving occupations"', add
 label define occ_lbl 530000 `"Transportation and material moving occupations"', add
 label define occ_lbl 999999 `"Discontinued Codes"', add
+// added in February 2023 - new codes
+label define occ_lbl 430009	`"Office and administrative support occupations (SOC 2010) 43000D"', add
+label define occ_lbl 530009	`"Transportation and material moving occupations (SOC 2010)	53000D"'
 label values occupation_code occ_lbl
 
 
