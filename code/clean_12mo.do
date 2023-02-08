@@ -22,3 +22,4 @@ sort id year
 
 
 save "${clean_data}/fseries_12month.dta", replace
+export excel  using "${output}/fseries_12month.xls",  firstrow(varlabels) replace

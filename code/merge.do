@@ -15,6 +15,14 @@ drop if periodicity_code=="Q"
 
 *Owner
 destring owner, replace
+capture confirm numeric variable owner
+if _rc != 0 {
+	    local rc=_rc
+        di in red "Problem with variable owner: `rc'"
+		tab owner
+		codebook owner
+		exit(2)
+}
 label define owner_lbl 1 `"Civilian workers"'
 label define owner_lbl 2 `"Private industry workers"', add
 label define owner_lbl 3 `"State and local government workers"', add
@@ -28,6 +36,14 @@ label values owner owner_lbl
 	replace industry_code="991000" if industry_code=="G00000"
 	replace industry_code="992000" if industry_code=="S00000"
 	destring industry_code, replace
+	capture confirm numeric variable industry_code
+if _rc != 0 {
+		local var "industry_code"
+        di in red "Problem with variable `var'"
+		tab `var'
+		codebook `var'
+		exit(2)
+}
 	label define ind_lbl 0 `"All workers"'
 	label define ind_lbl 220000 `"Utilities"', add
 	label define ind_lbl 230000 `"Construction"', add
@@ -69,7 +85,18 @@ label values owner owner_lbl
 
 *Occupation
 replace occupation_code="999999" if occupation_code=="DISCON"
-destring occupation_code, replace
+replace occupation_code="430009" if occupation_code=="43000D"
+replace occupation_code="530009" if occupation_code=="53000D"
+destring occupation_code, replace 
+capture confirm numeric variable occupation_code
+if _rc != 0 {
+		local var "occupation_code"
+        di in red "Problem with variable `var'"
+		tab `var'
+		codebook `var'
+		exit(2)
+}
+
 label define occ_lbl 0 `"All workers"'
 label define occ_lbl 1 `"All workers, excluding sales"', add
 label define occ_lbl 111300 `"Management, business, and financial occupations"', add
@@ -89,11 +116,22 @@ label define occ_lbl 510000 `"Production occupations"', add
 label define occ_lbl 515300 `"Production, transportation, and material moving occupations"', add
 label define occ_lbl 530000 `"Transportation and material moving occupations"', add
 label define occ_lbl 999999 `"Discontinued Codes"', add
+// added in February 2023 - new codes
+label define occ_lbl 430009	`"Office and administrative support occupations (SOC 2010) 43000D"', add
+label define occ_lbl 530009	`"Transportation and material moving occupations (SOC 2010)	53000D"', add
 label values occupation_code occ_lbl
 
 
 *Subcell (only numeric values exist in data)
 destring subcell, replace
+capture confirm numeric variable subcell
+if _rc != 0 {
+		local var "subcell"
+        di in red "Problem with variable `var'"
+		tab `var'
+		codebook `var'
+		exit(2)
+}
 label define subcell_lbl 0 `"All workers"', add
 label define subcell_lbl 23 `"Union"', add
 label define subcell_lbl 24 `"Nonunion"', add

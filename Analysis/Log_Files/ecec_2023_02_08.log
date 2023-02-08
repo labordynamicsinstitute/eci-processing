@@ -1,0 +1,1783 @@
+-------------------------------------------------------------------------------
+      name:  <unnamed>
+       log:  /project/Analysis/Log_Files/ecec_2023_02_08.log
+  log type:  text
+ opened on:   8 Feb 2023, 23:03:44
+
+. 
+. /*Notes:
+>         - I have to manually update the raw/bls_cpi.xlsx file with current Q 
+> data
+>         - I have to manually add 1 to "global cpi_max_time" for each new Q's 
+> of data (on 1/31/20 I increased to 239. on 10/29/21 i increased to 246. on 01
+> /28/22 I increased to 247
+> */
+. 
+. 
+. *Specify globals used in command files
+. global max_time=247
+
+. 
+. /* verify if "set_key.do" is there */
+. 
+. capture confirm file set_key.do
+
+. if _rc == 0 {
+.     run set_key.do
+.         set fredkey $FREDKEY
+. }
+
+. else { 
+.     di in red "set_key.do not found - FRED pull will not work"
+.         exit, STATA
+. } 
+
+. 
+. * install required packages
+. ssc install bgshade
+checking bgshade consistency and verifying not already installed...
+installing into /home/statauser/ado/plus/...
+installation complete.
+
+. 
+. 
+. *Set sections of code to run with the following code (0 = don't run; 1 = run)
+. global do_import = 1
+
+. global do_cpi = 1
+
+. global do_merge = 1
+
+. global do_clean_12mo = 1
+
+. global do_analysis_12mo = 1
+
+. 
+. 
+. 
+. 
+. 
+. *Execute do files
+. if ${do_import}==1                                      do "${do_files}/impor
+> t.do"
+
+. *Import data from BLS website
+. cd "${raw_data}"
+/project/data/raw
+
+. 
+. foreach y in area aspect contacts   estimate footnote industry occupation own
+> er periodicity seasonal series subcell {
+  2.         clear
+  3.         copy https://download.bls.gov/pub/time.series/ci/ci.`y' f`y'.txt, 
+> text replace
+  4.         import delimited "${raw_data}/f`y'.txt", delimiter(tab)  stringcol
+> s(_all)
+  5.         save "${raw_data}/f`y'.dta", replace
+  6.         }
+(file farea.txt not found)
+(encoding automatically selected: ISO-8859-1)
+(5 vars, 33 obs)
+(file /project/data/raw/farea.dta not found)
+file /project/data/raw/farea.dta saved
+(file faspect.txt not found)
+(encoding automatically selected: ISO-8859-1)
+(6 vars, 177,838 obs)
+(file /project/data/raw/faspect.dta not found)
+file /project/data/raw/faspect.dta saved
+(file fcontacts.txt not found)
+(encoding automatically selected: ISO-8859-1)
+(1 var, 15 obs)
+(file /project/data/raw/fcontacts.dta not found)
+file /project/data/raw/fcontacts.dta saved
+(file festimate.txt not found)
+(encoding automatically selected: ISO-8859-1)
+(5 vars, 4 obs)
+(file /project/data/raw/festimate.dta not found)
+file /project/data/raw/festimate.dta saved
+(file ffootnote.txt not found)
+(encoding automatically selected: ISO-8859-1)
+(2 vars, 22 obs)
+(file /project/data/raw/ffootnote.dta not found)
+file /project/data/raw/ffootnote.dta saved
+(file findustry.txt not found)
+(encoding automatically selected: ISO-8859-1)
+(5 vars, 36 obs)
+(file /project/data/raw/findustry.dta not found)
+file /project/data/raw/findustry.dta saved
+(file foccupation.txt not found)
+(encoding automatically selected: ISO-8859-1)
+(5 vars, 21 obs)
+(file /project/data/raw/foccupation.dta not found)
+file /project/data/raw/foccupation.dta saved
+(file fowner.txt not found)
+(encoding automatically selected: ISO-8859-1)
+(5 vars, 3 obs)
+(file /project/data/raw/fowner.dta not found)
+file /project/data/raw/fowner.dta saved
+(file fperiodicity.txt not found)
+(encoding automatically selected: ISO-8859-1)
+(5 vars, 6 obs)
+(file /project/data/raw/fperiodicity.dta not found)
+file /project/data/raw/fperiodicity.dta saved
+(file fseasonal.txt not found)
+(encoding automatically selected: ISO-8859-1)
+(2 vars, 3 obs)
+(file /project/data/raw/fseasonal.dta not found)
+file /project/data/raw/fseasonal.dta saved
+(file fseries.txt not found)
+(encoding automatically selected: ISO-8859-1)
+(15 vars, 2,467 obs)
+(file /project/data/raw/fseries.dta not found)
+file /project/data/raw/fseries.dta saved
+(file fsubcell.txt not found)
+(encoding automatically selected: ISO-8859-1)
+(5 vars, 15 obs)
+(file /project/data/raw/fsubcell.dta not found)
+file /project/data/raw/fsubcell.dta saved
+
+.         
+.         
+. *Three files have odd naming structure and require different commands
+.         clear
+
+.         copy https://download.bls.gov/pub/time.series/ci/ci.data.0.Current fc
+> urrent.txt, text replace
+(file fcurrent.txt not found)
+
+.         import delimited "${raw_data}/fcurrent.txt", delimiter(tab) stringcol
+> s(_all)
+(encoding automatically selected: ISO-8859-1)
+(5 vars, 72,344 obs)
+
+.         save "${raw_data}/fcurrent.dta", replace
+(file /project/data/raw/fcurrent.dta not found)
+file /project/data/raw/fcurrent.dta saved
+
+. 
+.         clear
+
+.         copy https://download.bls.gov/pub/time.series/ci/ci.data.1.AllData fa
+> lldata.txt, text replace
+(file falldata.txt not found)
+
+.         import delimited "${raw_data}/falldata.txt", delimiter(tab) stringcol
+> s(_all)
+(encoding automatically selected: ISO-8859-1)
+(5 vars, 177,838 obs)
+
+.         save "${raw_data}/falldata.dta", replace
+(file /project/data/raw/falldata.dta not found)
+file /project/data/raw/falldata.dta saved
+
+. 
+.         clear
+
+.         copy https://download.bls.gov/pub/time.series/ci/ci.txt readme.txt, t
+> ext replace
+(file readme.txt not found)
+
+. 
+.         clear
+
+.         copy https://www.bls.gov/web/eci/echealth.txt health.txt, text replac
+> e  
+(file health.txt not found)
+
+. 
+end of do-file
+
+. if ${do_cpi}==1                                         do "${do_files}/cpi_f
+> red.do"
+
+. *Import and prepare cpi data (series = CUUR0000SA0, CPI for All Urban Consume
+> rs (CPI-U))
+. * FRED: CPIAUCSL = seasonally adjusted
+. * FRED: CPIAUCNS = not seasonally adjusted
+. 
+. global CPIVAR "CPIAUCNS"
+
+. import fred $CPIVAR
+
+Summary
+-------------------------------------------------------------------------------
+Series ID                    Nobs    Date range                Frequency
+-------------------------------------------------------------------------------
+CPIAUCNS                     1320    1913-01-01 to 2022-12-01  Monthly
+-------------------------------------------------------------------------------
+# of series imported: 1
+   highest frequency: Monthly
+    lowest frequency: Monthly
+
+. 
+. * convert to quarterly
+. gen z1 = year(daten)
+
+. tostring z1, replace
+z1 was float now str4
+
+. gen z2 = int(month(daten)/4)+1
+
+. tostring z2, replace
+z2 was float now str1
+
+. gen yq =z1+"Q"+z2
+
+. gen time = quarterly(yq, "YQ")
+
+. format time %tq
+
+. drop yq z1 z2 
+
+. order time
+
+. sort time
+
+. 
+. * summarize to quarterly level
+. collapse (mean) cpi = $CPIVAR, by(time)
+
+. 
+. 
+. *make 12 month percent change cpi measure
+. gen cpi_12mo = (cpi - cpi[_n-4])/(cpi[_n-4])*100
+(4 missing values generated)
+
+. 
+. 
+. save "${mod_data}/cpi.dta", replace
+(file /project/data/modified/cpi.dta not found)
+file /project/data/modified/cpi.dta saved
+
+. 
+. 
+. *make series style data
+. keep if time>=164 & time<=${max_time}
+(356 observations deleted)
+
+. keep time cpi_12mo
+
+. gen id = 9999
+
+. gen series_title = "CPI, 12-month change"
+
+. gen owner_code = 999
+
+. rename cpi value
+
+. order series_title id time value owner_code
+
+. save "${mod_data}/cpi_series.dta", replace
+(file /project/data/modified/cpi_series.dta not found)
+file /project/data/modified/cpi_series.dta saved
+
+. 
+. 
+. 
+end of do-file
+
+. if ${do_merge}==1                                       do "${do_files}/merge
+> .do"
+
+. *Merge data files with alldata file
+. 
+. *start with all data file
+. use "${raw_data}/falldata.dta", clear
+
+. 
+. *merge series file
+.         merge m:1 series_id using "${raw_data}/fseries.dta"
+(variable footnote_codes was str1, now str5 to accommodate using data's
+       values)
+
+    Result                      Number of obs
+    -----------------------------------------
+    Not matched                             0
+    Matched                           177,838  (_merge==3)
+    -----------------------------------------
+
+.         *confirm everything merged properly
+.                 gen temp1=_merge==1
+
+.                 gen temp2=_merge==2
+
+.                 assert temp1+ temp2==0
+
+.         drop _merge temp*
+
+. *drop 3 month change series 
+. drop if periodicity_code=="Q"
+(37,046 observations deleted)
+
+. 
+. *Owner
+. destring owner, replace
+owner_code: all characters numeric; replaced as byte
+
+. capture confirm numeric variable owner
+
+. if _rc != 0 {
+.             local rc=_rc
+.         di in red "Problem with variable owner: `rc'"
+.                 tab owner
+.                 codebook owner
+.                 exit(2)
+. }
+
+. label define owner_lbl 1 `"Civilian workers"'
+
+. label define owner_lbl 2 `"Private industry workers"', add
+
+. label define owner_lbl 3 `"State and local government workers"', add
+
+. label values owner owner_lbl 
+
+. 
+. 
+. *Industry
+.         replace industry_code="520100" if industry_code=="520A00"
+(1,970 real changes made)
+
+.         replace industry_code="540100" if industry_code=="540A00"
+(1,056 real changes made)
+
+.         replace industry_code="999999" if industry_code=="DISCON"
+(0 real changes made)
+
+.         replace industry_code="991000" if industry_code=="G00000"
+(9,538 real changes made)
+
+.         replace industry_code="992000" if industry_code=="S00000"
+(10,418 real changes made)
+
+.         destring industry_code, replace
+industry_code: all characters numeric; replaced as long
+
+.         capture confirm numeric variable industry_code
+
+. if _rc != 0 {
+.                 local var "industry_code"
+.         di in red "Problem with variable `var'"
+.                 tab `var'
+.                 codebook `var'
+.                 exit(2)
+. }
+
+.         label define ind_lbl 0 `"All workers"'
+
+.         label define ind_lbl 220000 `"Utilities"', add
+
+.         label define ind_lbl 230000 `"Construction"', add
+
+.         label define ind_lbl 300000 `"Manufacturing"', add
+
+.         label define ind_lbl 310000 `"Durable Goods manufacturers"', add
+
+.         label define ind_lbl 320000 `"Non-durable Goods manufacturers"', add
+
+.         label define ind_lbl 336411 `"Aircraft manufacturing"', add
+
+.         label define ind_lbl 400000 `"Trade, transportation, and utilities"',
+>  add
+
+.         label define ind_lbl 412000 `"Retail trade"', add
+
+.         label define ind_lbl 420000 `"Wholesale trade"', add
+
+.         label define ind_lbl 430000 `"Transportation and warehousing"', add
+
+.         label define ind_lbl 510000 `"Information"', add
+
+.         label define ind_lbl 520000 `"Finance and insurance"', add
+
+.         label define ind_lbl 520100 `"Financial activities"', add
+
+.         label define ind_lbl 522000 `"Credit intermediation"', add
+
+.         label define ind_lbl 524000 `"Insurance carriers"', add
+
+.         label define ind_lbl 530000 `"Real estate and rental and leasing"', a
+> dd
+
+.         label define ind_lbl 540000 `"Professional, scientific, and technical
+>  services"', add
+
+.         label define ind_lbl 540100 `"Professional and business services"', a
+> dd
+
+.         label define ind_lbl 560000 `"Administrative and support and waste ma
+> nagement and remediation services"', add
+
+.         label define ind_lbl 600000 `"Education and health services"', add
+
+.         label define ind_lbl 610000 `"Educational services"', add
+
+.         label define ind_lbl 610500 `"Schools"', add
+
+.         label define ind_lbl 611100 `"Elementary and secondary schools"', add
+
+.         label define ind_lbl 612000 `"Junior colleges, colleges, universities
+> , and professional schools"', add
+
+.         label define ind_lbl 620000 `"Health care and social assistance"', ad
+> d
+
+.         label define ind_lbl 622000 `"Hospitals"', add
+
+.         label define ind_lbl 623000 `"Nursing and residential care facilities
+> "', add
+
+.         label define ind_lbl 623100 `"Nursing care facilities"', add
+
+.         label define ind_lbl 700000 `"Leisure and hospitality"', add
+
+.         label define ind_lbl 720000 `"Accommodation and food services"', add
+
+.         label define ind_lbl 810000 `"Other services (except public administr
+> ation)"', add
+
+.         label define ind_lbl 920000 `"Public administration"', add
+
+.         label define ind_lbl 999999 `"Discontinued codes"', add
+
+.         label define ind_lbl 991000 `"Goods producing"', add
+
+.         label define ind_lbl 992000 `"Service providing"', add
+
+.         label values industry_code ind_lbl
+
+. 
+. 
+. *Occupation
+. replace occupation_code="999999" if occupation_code=="DISCON"
+(0 real changes made)
+
+. replace occupation_code="430009" if occupation_code=="43000D"
+(1,036 real changes made)
+
+. replace occupation_code="530009" if occupation_code=="53000D"
+(1,906 real changes made)
+
+. destring occupation_code, replace 
+occupation_code: all characters numeric; replaced as long
+
+. capture confirm numeric variable occupation_code
+
+. if _rc != 0 {
+.                 local var "occupation_code"
+.         di in red "Problem with variable `var'"
+.                 tab `var'
+.                 codebook `var'
+.                 exit(2)
+. }
+
+. 
+. label define occ_lbl 0 `"All workers"'
+
+. label define occ_lbl 1 `"All workers, excluding sales"', add
+
+. label define occ_lbl 111300 `"Management, business, and financial occupations
+> "', add
+
+. label define occ_lbl 112900 `"Management, professional and related occupation
+> s"', add
+
+. label define occ_lbl 114300 `"All white collar workers"', add
+
+. label define occ_lbl 114301 `"All while collar workers, excluding sales"', ad
+> d
+
+. label define occ_lbl 152900 `"Professional and related occupations"', add
+
+. label define occ_lbl 313900 `"Service occupations"', add
+
+. label define occ_lbl 410000 `"Sales and related occupations"', add
+
+. label define occ_lbl 414300 `"Sales and office occupations"', add
+
+. label define occ_lbl 430000 `"Office and administrative support occupations"'
+> , add
+
+. label define occ_lbl 454700 `"Construction, and extraction, farming, fishing,
+>  and forestry occupations"', add
+
+. label define occ_lbl 454900 `"Natural resources, construction, and maintenanc
+> e occupations"', add
+
+. label define occ_lbl 455300 `"All blue collar workers"', add
+
+. label define occ_lbl 490000 `"Installation, maintenance, and repair occupatio
+> ns"', add
+
+. label define occ_lbl 510000 `"Production occupations"', add
+
+. label define occ_lbl 515300 `"Production, transportation, and material moving
+>  occupations"', add
+
+. label define occ_lbl 530000 `"Transportation and material moving occupations"
+> ', add
+
+. label define occ_lbl 999999 `"Discontinued Codes"', add
+
+. // added in February 2023 - new codes
+. label define occ_lbl 430009     `"Office and administrative support occupatio
+> ns (SOC 2010) 43000D"', add
+
+. label define occ_lbl 530009     `"Transportation and material moving occupati
+> ons (SOC 2010)     53000D"', add
+
+. label values occupation_code occ_lbl
+
+. 
+. 
+. *Subcell (only numeric values exist in data)
+. destring subcell, replace
+subcell_code: all characters numeric; replaced as byte
+
+. capture confirm numeric variable subcell
+
+. if _rc != 0 {
+.                 local var "subcell"
+.         di in red "Problem with variable `var'"
+.                 tab `var'
+.                 codebook `var'
+.                 exit(2)
+. }
+
+. label define subcell_lbl 0 `"All workers"', add
+
+. label define subcell_lbl 23 `"Union"', add
+
+. label define subcell_lbl 24 `"Nonunion"', add
+
+. label define subcell_lbl 27 `"Time"', add
+
+. label values subcell subcell_lbl
+
+. 
+. 
+. *Area
+. destring area, replace
+area_code: all characters numeric; replaced as long
+
+. label define area_lbl 122 `"Atlanta-Athens-Clarke County-Sandy Springs, GA CS
+> A"'
+
+. label define area_lbl 148 `"Boston-Worcester-Providence, MA-RI-NH-CT CSA"', a
+> dd
+
+. label define area_lbl 176 `"Chicago-Naperville, IL-IN-WI CSA"', add
+
+. label define area_lbl 206 `"Dallas-Fort Worth, TX-OK CSA"', add
+
+. label define area_lbl 220 `"Detroit-Warren-Ann Arbor, MI CSA"', add
+
+. label define area_lbl 288 `"Houston-The Woodlands, TX CSA"', add
+
+. label define area_lbl 348 `"Los Angeles-Long Beach, CA CSA"', add
+
+. label define area_lbl 378 `"Minneapolis-St. Paul, MN-WI CSA"', add
+
+. label define area_lbl 408 `"New York-Newark, NY-NJ-CT-PA CSA"', add
+
+. label define area_lbl 428 `"Philadelphia-Reading-Camden, PA-NJ-DE-MD CSA"', a
+> dd
+
+. label define area_lbl 488 `"San Jose-San Francisco-Oakland, CA CSA"', add
+
+. label define area_lbl 500 `"Seattle-Tacoma, WA CSA"', add
+
+. label define area_lbl 548 `"Washington-Baltimore-Arlington, DC-MD-VA-WV-PA CS
+> A"', add
+
+. label define area_lbl 33100 `"Miami-Fort Lauderdale-Port St. Lucie, FL CSA"',
+>  add
+
+. label define area_lbl 38060 `"Phoenix-Mesa-Scottsdale, AZ MSA"', add
+
+. label define area_lbl 98100 `"Northeast Region"', add
+
+. label define area_lbl 98200 `"South Region"', add
+
+. label define area_lbl 98300 `"Midwest Region"', add
+
+. label define area_lbl 98400 `"West Region"', add
+
+. label define area_lbl 98999 `"Census Regions and Divisions"', add
+
+. label define area_lbl 99100 `"New England Census Division"', add
+
+. label define area_lbl 99120 `"Middle Atlantic Census Division"', add
+
+. label define area_lbl 99130 `"East South Central Census Division"', add
+
+. label define area_lbl 99140 `"South Atlantic Census Division"', add
+
+. label define area_lbl 99150 `"East North Central Census Division"', add
+
+. label define area_lbl 99160 `"West North Central Census Division"', add
+
+. label define area_lbl 99170 `"West South Central Census Division"', add
+
+. label define area_lbl 99180 `"Mountain Census Division"', add
+
+. label define area_lbl 99190 `"Pacific Census Division"', add
+
+. label define area_lbl 99200 `"Metropolitan Statistical Area"', add
+
+. label define area_lbl 99210 `"Metropolitan"', add
+
+. label define area_lbl 99220 `"Nonmetropolitan"', add
+
+. label define area_lbl 99999 `"United States (National)"', add
+
+. label values area area_lbl
+
+. 
+. 
+. *Periodicity
+. encode periodicity_code, gen(p2)
+
+. drop periodicity_code
+
+. rename p2 periodicity_code
+
+. label define per_lbl 1 `"12-month percent change"'
+
+. label define per_lbl 2 `"Index number"', add
+
+. label values periodicity_code per_lbl
+
+. 
+. 
+. *Estimate
+. destring estimate_code, replace
+estimate_code: all characters numeric; replaced as byte
+
+. label define est_lbl 1 `"Total compensation"', add
+
+. label define est_lbl 2 `"Wages and salaries"', add
+
+. label define est_lbl 3 `"Total benefits"', add
+
+. label values estimate_code est_lbl
+
+. 
+. *clean value var
+. replace value="" if value=="           -"
+(174 real changes made)
+
+. destring value, replace
+value: all characters numeric; replaced as double
+(174 missing values generated)
+
+. 
+. 
+. *make stata-formatted date variable
+. gen yq =year+period
+
+. gen time = quarterly(yq, "YQ")
+
+. format time %tq
+
+. drop yq
+
+. 
+. *make numeric id
+. sort series_id series_title
+
+. egen id=group(series_id)
+
+. xtset id time
+
+Panel variable: id (unbalanced)
+ Time variable: time, 1982q1 to 2022q4
+         Delta: 1 quarter
+
+. 
+. *confirm that core series maintain the same ID value over data releases
+. * assert series_title=="Total compensation for All Civilian workers in All in
+> dustries and occupations, 12-month percent change" if id==147
+. preserve
+
+. keep if series_id=="CIU1010000000000A"
+(140,704 observations deleted)
+
+. qui sum id
+
+. global id_tc = r(max) // was 147
+
+. *assert series_title=="Wages and salaries for All Civilian workers in All ind
+> ustries and occupations, 12-month percent change" if id==285
+. restore, preserve
+
+. keep if series_id=="CIU1020000000000A"
+(140,704 observations deleted)
+
+. qui sum id
+
+. global id_ws = r(max)
+
+. * assert series_title=="Total benefits for All Civilian workers in All indust
+> ries and occupations, 12-month percent change" if id==423
+. restore, preserve
+
+. keep if series_id=="CIU1030000000000A"
+(140,704 observations deleted)
+
+. qui sum id
+
+. global id_tb = r(max) // 423 // previously 267
+
+. restore
+
+. 
+. /*
+> *bring in cpi data
+> merge m:1 time using "${mod_data}/cpi.dta"
+> keep if _merge==3
+> drop _merge
+> */
+. 
+. *reoder
+. order series_title series_id id time  year period value  seasonal owner_code 
+>  industry_code  occupation_code  subcell_code  area_code  periodicity_code es
+> timate_code begin_year begin_period end_year end_period     footnote_codes 
+
+. 
+. 
+. *make a seasonally adjusted index file
+. preserve
+
+.         keep if seasonal=="S"
+(129,204 observations deleted)
+
+.         save "${mod_data}/fseries_seasonal_index.dta", replace
+(file /project/data/modified/fseries_seasonal_index.dta not found)
+file /project/data/modified/fseries_seasonal_index.dta saved
+
+.         restore
+
+. 
+. *make a 12-month change file
+. preserve
+
+.         keep if periodicity_code==1
+(113,256 observations deleted)
+
+.         save "${mod_data}/fseries_12month.dta", replace
+(file /project/data/modified/fseries_12month.dta not found)
+file /project/data/modified/fseries_12month.dta saved
+
+.         restore
+
+. 
+end of do-file
+
+. if ${do_clean_12mo}==1                          do "${do_files}/clean_12mo.do
+> "
+
+. *prep 12 month data for analysis
+. 
+. use "${mod_data}/fseries_12month.dta", clear
+
+. 
+. 
+. *define recession periods (https://www.nber.org/cycles.html)
+. gen recession=0
+
+. replace recession=1 if time>=quarterly("2001Q1","YQ") & time<=quarterly("2001
+> Q4","YQ")
+(1,172 real changes made)
+
+. replace recession=1 if time>=quarterly("2007Q4","YQ") & time<=quarterly("2009
+> Q2","YQ")
+(2,207 real changes made)
+
+. replace recession=1 if time>=quarterly("2019Q4","YQ") & time<=quarterly("2020
+> Q2","YQ")
+(945 real changes made)
+
+. label var recession "Recession"
+
+. 
+. 
+. *make a series obs number for sorting
+. bysort id: gen n=_n
+
+. 
+. *other variable labels
+. label var time "Time"
+
+. label var value "ECI"
+
+. 
+. sort id year
+
+. 
+. 
+. save "${clean_data}/fseries_12month.dta", replace
+(file /project/data/clean/fseries_12month.dta not found)
+file /project/data/clean/fseries_12month.dta saved
+
+. export excel  using "${output}/fseries_12month.xls",  firstrow(varlabels) rep
+> lace
+file /project/Analysis/Output/fseries_12month.xls saved
+
+. 
+end of do-file
+
+. if ${do_analysis_12mo}==1                       do "${do_files}/analysis_12mo
+> .do"
+
+. *Analysis of 12 month change ECI data
+. 
+. use  "${clean_data}/fseries_12month.dta", clear
+
+. 
+. ***define recession graph commands
+. local all_shade bgshade time,shaders(recession) sstyle(lwidth(1.15) lcolor(gs
+> 14)) legend
+
+. local recent_shade bgshade time if time>=224,shaders(recession) sstyle(lwidth
+> (4.7) lcolor(gs14)) legend
+
+. local regions_shade bgshade time if time>=224,shaders(recession) sstyle(lwidt
+> h(1.7) lcolor(gs14)) legend
+
+. 
+. 
+. *ECI Trend for Total Compensation - All Civilian Workers 
+. preserve
+
+.         keep if id==${id_tc}
+(27,448 observations deleted)
+
+.         sum value
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+       value |         88    2.839773    .8617731        1.4        5.1
+
+.         local y = r(max)
+
+.         gen upper = recession*`y'*1.05
+
+.         format %2.1f value
+
+.         tostring value, gen(v2)
+v2 generated as str3
+
+.         gen length=length(v2)
+
+.         replace v2=v2+".0" if length==1
+(14 real changes made)
+
+.         gen marker = "{bf:" + v2 + "}"
+
+.         gen marker2=marker
+
+.         replace marker="" if time==${max_time}
+(1 real change made)
+
+.         replace marker2="" if time<${max_time}
+(83 real changes made)
+
+.         twoway   (line upper time if inrange(time, 164, 167), recast(area) co
+> lor(gs14)) (line upper time if inrange(time, 191, 197), recast(area) color(gs
+> 14)) (line upper time if inrange(time, 239, 242), recast(area) color(gs14)) (
+> line value time, lcolor(maroon)) (scatter value time, mlabcolor(black) msym(n
+> one) mlabel(marker2) mlabsize(small) mlabangle(0) mlabposition(3) mlabgap(0))
+>  (scatter value time, mlabcolor(black) msym(none) mlabel(marker) mlabsize(tin
+> y) mlabangle(90) mlabposition(12) mlabgap(*3) xlab(164(4)${max_time},labsize(
+> small) angle(45)) yscale(range(0 4.5)) yla(0 (1) 4.5) xtitle("") ytitle("Perc
+> ent Change (%)") title("Employment Cost Index for Total Compensation") subtit
+> le("All Civilian Workers, 12-month Percent Change") legend(order(4 2) label(2
+>  "Recession") label(3 "ECI")) note("Institute for Compensation Studies at Cor
+> nell University" "Source: U.S. Bureau of Labor Statistics’ 12-month Employmen
+> t Cost Index"))
+
+.         sleep 5000
+
+.         graph save   "${output}/eci_total_comp_allciv_wnotes.gph", replace
+(file /project/Analysis/Output/eci_total_comp_allciv_wnotes.gph not found)
+file /project/Analysis/Output/eci_total_comp_allciv_wnotes.gph saved
+
+.         graph export "${output}/eci_total_comp_allciv_wnotes.pdf", replace
+file /project/Analysis/Output/eci_total_comp_allciv_wnotes.pdf saved as PDF
+    format
+
+.         graph export "${output}/eci_total_comp_allciv_wnotes.png", replace
+(file /project/Analysis/Output/eci_total_comp_allciv_wnotes.png not found)
+file /project/Analysis/Output/eci_total_comp_allciv_wnotes.png written in PNG f
+> ormat
+
+. 
+.         twoway   (line upper time if inrange(time, 164, 167), recast(area) co
+> lor(gs14)) (line upper time if inrange(time, 191, 197), recast(area) color(gs
+> 14)) (line upper time if inrange(time, 239, 242), recast(area) color(gs14)) (
+> line value time, lcolor(maroon)) (scatter value time, mlabcolor(black) msym(n
+> one) mlabel(marker2) mlabsize(small) mlabangle(0) mlabposition(3) mlabgap(0))
+>  (scatter value time, mlabcolor(black) msym(none) mlabel(marker) mlabsize(tin
+> y) mlabangle(90) mlabposition(12) mlabgap(*3) xlab(164(4)${max_time},labsize(
+> small) angle(45)) yscale(range(0 4.5)) yla(0 (1) 4.5) xtitle("") ytitle("Perc
+> ent Change (%)") title("Employment Cost Index for Total Compensation") subtit
+> le("All Civilian Workers, 12-month Percent Change") legend(order(4 2) label(2
+>  "Recession") label(3 "ECI")))
+
+.         sleep 5000
+
+.         graph save   "${output}/eci_total_comp_allciv_nonotes.gph", replace  
+>    
+(file /project/Analysis/Output/eci_total_comp_allciv_nonotes.gph not found)
+file /project/Analysis/Output/eci_total_comp_allciv_nonotes.gph saved
+
+.         graph export "${output}/eci_total_comp_allciv_nonotes.pdf", replace  
+>    
+file /project/Analysis/Output/eci_total_comp_allciv_nonotes.pdf saved as PDF
+    format
+
+.         graph export "${output}/eci_total_comp_allciv_nonotes.png", replace
+(file /project/Analysis/Output/eci_total_comp_allciv_nonotes.png not found)
+file /project/Analysis/Output/eci_total_comp_allciv_nonotes.png written in PNG 
+> format
+
+.         export excel id series_title time value recession using "${output}/ec
+> i_total_comp_allciv.xls",  firstrow(varlabels) replace
+file /project/Analysis/Output/eci_total_comp_allciv.xls saved
+
+.         restore
+
+.         
+. 
+.         
+. 
+. *ECI Full Breakdown for all civilian workers (Total Comp = ${id_tc}; Wages & 
+> Sal = ${id_ws}; Total Ben = ${id_tb})
+. preserve
+
+.         keep if id==${id_tc}    
+(27,448 observations deleted)
+
+.         label var value "Total Compensation"
+
+.         export excel time value using "${output}/eci_breakdown_all_civ.xls", 
+> sheet("breakdown") cell(A1) firstrow(varlabels) replace
+file /project/Analysis/Output/eci_breakdown_all_civ.xls saved
+
+.         restore
+
+. 
+. preserve
+
+.         keep if id==${id_ws}
+(27,448 observations deleted)
+
+.         label var value "Wages and Salaries"
+
+.         export excel value using "${output}/eci_breakdown_all_civ.xls", sheet
+> ("breakdown") sheetmodify cell(C1) firstrow(varlabels)
+file /project/Analysis/Output/eci_breakdown_all_civ.xls saved
+
+.         restore
+
+. preserve
+
+.         keep if id==${id_tb}
+(27,448 observations deleted)
+
+.         label var value "Total Benefits"
+
+.         export excel value recession using "${output}/eci_breakdown_all_civ.x
+> ls", sheet("breakdown") sheetmodify cell(D1) firstrow(varlabels)
+file /project/Analysis/Output/eci_breakdown_all_civ.xls saved
+
+.         restore
+
+. //preserve
+.         //use "${mod_data}/health_series.dta", clear
+.         //label var value "Health Benefits"
+.         //export excel value using "${output}/eci_breakdown_all_civ.xls", she
+> et("breakdown") sheetmodify cell(E1) firstrow(varlabels)
+.         //restore       
+. 
+.         
+. *ECI for Total Compensation  - All Private Workers (comparison across occupat
+> ions)
+. preserve
+
+.         keep if owner==2 & area==99999 & estimate_code==1 & subcell==0 & ind=
+> =0
+(26,080 observations deleted)
+
+.         keep if occupation_code==0 | occupation_code==112900 | occupation_cod
+> e==313900 | occupation_code==414300 | occupation_code==454900 | occupation_co
+> de==515300
+(928 observations deleted)
+
+.         label define occ2 0 "All Workers" 112900 "Mgmt., Prof.,  Related" 313
+> 900 "Service" 414300 "Sales and Office" 454900 "Nat. Res., Constr., Maint." 5
+> 15300 "Prod., Trans., Mat. Moving"
+
+.         label values occ occ2
+
+.         tab occ, gen(xocc_)
+
+           occupation_code |      Freq.     Percent        Cum.
+---------------------------+-----------------------------------
+               All Workers |         88       16.67       16.67
+    Mgmt., Prof.,  Related |         88       16.67       33.33
+                   Service |         88       16.67       50.00
+          Sales and Office |         88       16.67       66.67
+Nat. Res., Constr., Maint. |         88       16.67       83.33
+Prod., Trans., Mat. Moving |         88       16.67      100.00
+---------------------------+-----------------------------------
+                     Total |        528      100.00
+
+.         forvalues i=1(1)6 {
+  2.                 local x1: variable label xocc_`i'
+  3.                 local ylbl_`i' = substr("`x1'",18,.)
+  4.                 }
+
+.         sum value
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+       value |        528    2.868561    1.042164         .7          8
+
+.         local vmax=r(max)
+
+.         local vmin=r(min)
+
+.         gen upper=`vmax'*recession
+
+.         sort time
+
+.         keep if time>=164
+(0 observations deleted)
+
+. 
+.         `all_shade' twoway (tsline value if occ==0 || tsline value if occ==11
+> 2900 || tsline value if occ==313900 || tsline value if occ==414300 || tsline 
+> value if occ== 454900 || tsline value if occ==515300,  xlab(164(4)${max_time}
+> ,labsize(small) angle(45)) xtitle("") ytitle("Percent Change (%)") title("Emp
+> loyment Cost Index for Total Compensation") subtitle("All Private Workers, 12
+> -month Percent Change") legend(label(2 "All Workers") label(3 "Mgmt., Prof., 
+>  Related") label(4 "Service") label(5 "Sales and Office") label(6 "Nat. Res.,
+>  Constr., Maint.") label(7 "Prod., Trans., Mat. Moving")     size(vsmall) col
+> (3) order( 2 3 4 5 6 7)))
+
+.         *twoway (area upper time, color(gs14) ) (tsline value if occ==0) (tsl
+> ine value if occ==112900) (tsline value if occ==313900) (tsline value if occ=
+> =414300) (tsline value if occ== 454900) (tsline value if occ==515300,  xlab(1
+> 64(4)${max_time},labsize(small) angle(45)) xtitle("") ytitle("Percent Change 
+> (%)") title("Employment Cost Index for Total Compensation") subtitle("All Pri
+> vate Workers, 12-month Percent Change") legend(label(2 "All Workers") label(3
+>  "Mgmt., Prof.,  Related") label(4 "Service") label(5 "Sales and Office") lab
+> el(6 "Nat. Res., Constr., Maint.") label(7 "Prod., Trans., Mat. Moving")     
+> size(vsmall) col(3) order( 2 3 4 5 6 7)))
+.         *xtline value,t(time) i(occ) overlay  xlab(164(4)${max_time},labsize(
+> small) angle(45)) xtitle("") ytitle("Percent Change (%)") title("Employment C
+> ost Index for Total Compensation") subtitle("All Private Workers, 12-month Pe
+> rcent Change") legend(size(vsmall) col(3) order(1 2 3 4 5 6)) addplot((line u
+> pper time if inrange(time, 164, 167), recast(area) color(gs14)) (line upper t
+> ime if inrange(time, 191, 197), recast(area) color(gs14)) (line upper time if
+>  inrange(time, 240, ${max_time}), recast(area) color(gs14) below))
+.         *sleep 5000
+.         graph save   "${output}/eci_total_comp_allprivate.gph", replace
+(file /project/Analysis/Output/eci_total_comp_allprivate.gph not found)
+file /project/Analysis/Output/eci_total_comp_allprivate.gph saved
+
+.         graph export "${output}/eci_total_comp_allprivate.pdf", replace
+file /project/Analysis/Output/eci_total_comp_allprivate.pdf saved as PDF
+    format
+
+.         graph export "${output}/eci_total_comp_allprivate.png", replace
+(file /project/Analysis/Output/eci_total_comp_allprivate.png not found)
+file /project/Analysis/Output/eci_total_comp_allprivate.png written in PNG form
+> at
+
+.         keep time value occ
+
+.         reshape wide value, i(time) j(occ) 
+(j = 0 112900 313900 414300 454900 515300)
+
+Data                               Long   ->   Wide
+-----------------------------------------------------------------------------
+Number of observations              528   ->   88          
+Number of variables                   3   ->   7           
+j variable (6 values)   occupation_code   ->   (dropped)
+xij variables:
+                                  value   ->   value0 value112900 ... value5153
+> 00
+-----------------------------------------------------------------------------
+
+.         local i=1
+
+.         foreach y in value0 value112900 value313900 value414300 value454900 v
+> alue515300 {
+  2.                 label var `y' "`ylbl_`i''"
+  3.                 local i=`i'+1
+  4.                 }
+
+.         export excel  using "${output}/eci_total_comp_allprivate.xls",  first
+> row(varlabels) replace
+file /project/Analysis/Output/eci_total_comp_allprivate.xls saved
+
+.         restore
+
+.         
+. 
+. *ECI for Wages & Salaries  - All Private Workers (comparison across occupatio
+> ns)
+. preserve
+
+.         keep if owner==2 & area==99999 & estimate_code==2 & subcell==0 & ind=
+> =0
+(26,080 observations deleted)
+
+.         keep if occupation_code==0 | occupation_code==112900 | occupation_cod
+> e==313900 | occupation_code==414300 | occupation_code==454900 | occupation_co
+> de==515300
+(928 observations deleted)
+
+.         label define occ2 0 "All Workers" 112900 "Mgmt., Prof.,  Related" 313
+> 900 "Service" 414300 "Sales and Office" 454900 "Nat. Res., Constr., Maint." 5
+> 15300 "Prod., Trans., Mat. Moving"
+
+.         label values occ occ2
+
+.         sum value
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+       value |        528    2.772727    1.113917         .6        8.6
+
+.         local vmax=r(max)
+
+.         local vmin=r(min)
+
+.         gen upper=`vmax'*recession
+
+.         sort time
+
+.         keep if time>=164
+(0 observations deleted)
+
+.         `all_shade' twoway (tsline value if occ==0 || tsline value if occ==11
+> 2900 || tsline value if occ==313900 || tsline value if occ==414300 || tsline 
+> value if occ== 454900 || tsline value if occ==515300,  xlab(164(4)${max_time}
+> ,labsize(small) angle(45)) xtitle("") ytitle("Percent Change (%)") title("Emp
+> loyment Cost Index for Wages and Salaries") subtitle("All Private Workers, 12
+> -month Percent Change") legend(label(2 "All Workers") label(3 "Mgmt., Prof., 
+>  Related") label(4 "Service") label(5 "Sales and Office") label(6 "Nat. Res.,
+>  Constr., Maint.") label(7 "Prod., Trans., Mat. Moving")     size(vsmall) col
+> (3) order( 2 3 4 5 6 7)))
+
+.         *twoway (area upper time, color(gs14) ) (tsline value if occ==0) (tsl
+> ine value if occ==112900) (tsline value if occ==313900) (tsline value if occ=
+> =414300) (tsline value if occ== 454900) (tsline value if occ==515300,  xlab(1
+> 64(4)${max_time},labsize(small) angle(45)) xtitle("") ytitle("Percent Change 
+> (%)") title("Employment Cost Index for Wages and Salaries") subtitle("All Pri
+> vate Workers, 12-month Percent Change") legend(label(2 "All Workers") label(3
+>  "Mgmt., Prof.,  Related") label(4 "Service") label(5 "Sales and Office") lab
+> el(6 "Nat. Res., Constr., Maint.") label(7 "Prod., Trans., Mat. Moving")     
+> size(vsmall) col(3) order( 2 3 4 5 6 7)))
+.         *xtline value,t(time) i(occ) overlay  xlab(164(4)${max_time},labsize(
+> small) angle(45)) xtitle("") ytitle("Percent Change (%)") title("Employment C
+> ost Index for Wages and Salaries") subtitle("All Private Workers, 12-month Pe
+> rcent Change") legend( size(vsmall) col(3) order(1 2 3 4 5 6)) addplot((line 
+> upper time if inrange(time, 164, 167), recast(area) color(gs14)) (line upper 
+> time if inrange(time, 191, 197), recast(area) color(gs14)) (line upper time i
+> f inrange(time, 240, ${max_time}), recast(area) color(gs14) below))
+.         *sleep 5000
+.         graph save   "${output}/eci_ws_allprivate.gph", replace
+(file /project/Analysis/Output/eci_ws_allprivate.gph not found)
+file /project/Analysis/Output/eci_ws_allprivate.gph saved
+
+.         graph export "${output}/eci_ws_allprivate.pdf", replace
+file /project/Analysis/Output/eci_ws_allprivate.pdf saved as PDF format
+
+.         graph export "${output}/eci_ws_allprivate.png", replace
+(file /project/Analysis/Output/eci_ws_allprivate.png not found)
+file /project/Analysis/Output/eci_ws_allprivate.png written in PNG format
+
+. 
+.         keep time value occ
+
+.         reshape wide value, i(time) j(occ) 
+(j = 0 112900 313900 414300 454900 515300)
+
+Data                               Long   ->   Wide
+-----------------------------------------------------------------------------
+Number of observations              528   ->   88          
+Number of variables                   3   ->   7           
+j variable (6 values)   occupation_code   ->   (dropped)
+xij variables:
+                                  value   ->   value0 value112900 ... value5153
+> 00
+-----------------------------------------------------------------------------
+
+.         label var value0 "All Workers"
+
+.         label var value112900 "Mgmt., Prof.,  Related"
+
+.         label var value313900 "Service"
+
+.         label var value414300 "Sales and Office"
+
+.         label var value454900 "Nat. Res., Constr., Maint." 
+
+.         label var value515300 "Prod., Trans., Mat. Moving"
+
+.         export excel  using "${output}/eci_ws_allprivate.xls",  firstrow(varl
+> abels) replace
+file /project/Analysis/Output/eci_ws_allprivate.xls saved
+
+.         restore 
+
+.         
+. 
+. *ECI for Wages & Salaries  - All Private Workers (comparison across ALL occup
+> ations)
+. preserve
+
+.         keep if owner==2 & area==99999 & estimate_code==2 & subcell==0 & ind=
+> =0
+(26,080 observations deleted)
+
+.         bysort occ: gen N=_N
+
+.         drop if N==24
+(96 observations deleted)
+
+.         tab occ, gen(xocc_)
+
+                        occupation_code |      Freq.     Percent        Cum.
+----------------------------------------+-----------------------------------
+                            All workers |         88        6.47        6.47
+Management, business, and financial occ |         88        6.47       12.94
+Management, professional and related oc |         88        6.47       19.41
+   Professional and related occupations |         88        6.47       25.88
+                    Service occupations |         88        6.47       32.35
+          Sales and related occupations |         88        6.47       38.82
+           Sales and office occupations |         88        6.47       45.29
+Office and administrative support occup |         65        4.78       50.07
+Office and administrative support occup |         87        6.40       56.47
+Construction, and extraction, farming,  |         88        6.47       62.94
+Natural resources, construction, and ma |         88        6.47       69.41
+Installation, maintenance, and repair o |         88        6.47       75.88
+                 Production occupations |         88        6.47       82.35
+Production, transportation, and materia |         88        6.47       88.82
+Transportation and material moving occu |         65        4.78       93.60
+Transportation and material moving occu |         87        6.40      100.00
+----------------------------------------+-----------------------------------
+                                  Total |      1,360      100.00
+
+.         forvalues i=1(1)14 {
+  2.                 local x1: variable label xocc_`i'
+  3.                 local ylbl_`i' = substr("`x1'",18,.)
+  4.                 }
+
+.         keep time value occ
+
+.         reshape wide value, i(time) j(occ) 
+(j = 0 111300 112900 152900 313900 410000 414300 430000 430009 454700 454900 49
+> 0000 510000 515300 530000 530009)
+
+Data                               Long   ->   Wide
+-----------------------------------------------------------------------------
+Number of observations            1,360   ->   88          
+Number of variables                   3   ->   17          
+j variable (16 values)  occupation_code   ->   (dropped)
+xij variables:
+                                  value   ->   value0 value111300 ... value5300
+> 09
+-----------------------------------------------------------------------------
+
+.         local i=1
+
+.         foreach y in value0 value111300 value112900 value152900 value313900 v
+> alue410000 value414300 value430000 value454700 value454900 value490000 value5
+> 10000 value515300 value530000 {
+  2.                 label var `y' "`ylbl_`i''"
+  3.                 local i=`i'+1
+  4.                 }
+
+.         export excel  using "${output}/eci_ws_allprivate_allocc.xls",  firstr
+> ow(varlabels) replace
+file /project/Analysis/Output/eci_ws_allprivate_allocc.xls saved
+
+.         restore         
+
+.         
+. *ECI for Total Compensation - by Class of Worker
+. preserve
+
+.         keep if area==99999 & estimate_code==1 & subcell==0 & ind==0 & occ==0
+(27,272 observations deleted)
+
+.         keep series_title id time value owner recession
+
+.         append using "${mod_data}/cpi_series.dta"
+(variable owner_code was byte, now float to accommodate using data's values)
+
+.         label define owner2 1 "Civilian" 2 "Private" 3 "Public" 999 "CPI"
+
+.         label values owner_code owner2
+
+.         sum value
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+       value |        348    2.696442    1.052459   -1.38974   7.036404
+
+.         local vmax=r(max)
+
+.         local vmin=round(r(min),1)
+
+.         di "`vmin'"
+-1
+
+.         gen upper=`vmax'*recession
+(84 missing values generated)
+
+.         replace upper=`vmin' if upper==0
+(222 real changes made)
+
+.         sort time
+
+.         keep if time>=164
+(0 observations deleted)
+
+.         `all_shade' twoway (tsline value if owner==1 || tsline value if owner
+> ==2 || tsline value if owner==3 || tsline value if owner==999,  xlab(164(4)${
+> max_time},labsize(small) angle(45)) xtitle("") ytitle("Percent Change (%)") t
+> itle("Employment Cost Index for Total Compensation") subtitle("All Workers, 1
+> 2-month Percent Change") legend(label(2 "Civilian") label(3 "Private") label(
+> 4 "Public") label(5 "CPI")     size(vsmall) col(3) order( 2 3 4 5)))
+
+. *       twoway (area upper time, color(gs14) base(`vmin') ) (tsline value if 
+> owner==1) (tsline value if owner==2) (tsline value if owner==3) (tsline value
+>  if owner==999,  xlab(164(4)${max_time},labsize(small) angle(45)) xtitle("") 
+> ytitle("Percent Change (%)") title("Employment Cost Index for Total Compensat
+> ion") subtitle("All Workers, 12-month Percent Change") legend(label(2 "Civili
+> an") label(3 "Private") label(4 "Public") label(5 "CPI")       size(vsmall) c
+> ol(3) order( 2 3 4 5)))
+. *       xtline value,t(time) i(owner) overlay  xlab(164(4)${max_time},labsize
+> (small) angle(45)) xtitle("") ytitle("Percent Change (%)") title("Employment 
+> Cost Index for Total Compensation") subtitle("All Workers, 12-month Percent C
+> hange") legend(order(1 2 3 4) size(vsmall) col(4)) addplot((line upper time i
+> f inrange(time, 164, 167), recast(area) color(gs14) base(-2)) (line upper tim
+> e if inrange(time, 191, 197), recast(area) color(gs14) base(-2)) (line upper 
+> time if inrange(time, 240, ${max_time}), recast(area) color(gs14) base(-2) be
+> low))
+. *       sleep 5000
+.         graph save   "${output}/eci_tc_allworkers.gph", replace
+(file /project/Analysis/Output/eci_tc_allworkers.gph not found)
+file /project/Analysis/Output/eci_tc_allworkers.gph saved
+
+.         graph export "${output}/eci_tc_allworkers.pdf", replace
+file /project/Analysis/Output/eci_tc_allworkers.pdf saved as PDF format
+
+.         graph export "${output}/eci_tc_allworkers.png", replace
+(file /project/Analysis/Output/eci_tc_allworkers.png not found)
+file /project/Analysis/Output/eci_tc_allworkers.png written in PNG format
+
+. 
+.         drop upper
+
+.         sum value if time>=224
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+       value |        108    2.806369    1.070667   .5200377   7.036404
+
+.         local vmax=r(max)
+
+.         local vmin=round(r(min),1)
+
+.         di "`vmin'"
+1
+
+.         gen upper=`vmax'*recession
+(84 missing values generated)
+
+.         replace upper=`vmin' if upper==0
+(222 real changes made)
+
+.         sort time
+
+.         `recent_shade' twoway (tsline value if owner==1 & time>=224 || tsline
+>  value if owner==2 & time>=224 || tsline value if owner==3 & time>=224 || tsl
+> ine value if owner==999  & time>=224,  xlab(224(4)${max_time},labsize(small) 
+> angle(45)) xtick(#11) xtitle("") ytitle("Percent Change (%)") title("Employme
+> nt Cost Index for Total Compensation") subtitle("All Workers, 12-month Percen
+> t Change") legend(label(2 "Civilian") label(3 "Private") label(4 "Public") la
+> bel(5 "CPI")      size(vsmall) col(3) order( 2 3 4 5)))
+
+. *       twoway (area upper time if time>=224, color(gs14) base(`vmin') ) (tsl
+> ine value if owner==1 & time>=224) (tsline value if owner==2 & time>=224) (ts
+> line value if owner==3 & time>=224) (tsline value if owner==999  & time>=224,
+>   xlab(224(4)${max_time},labsize(small) angle(45)) xtick(#11) xtitle("") ytit
+> le("Percent Change (%)") title("Employment Cost Index for Total Compensation"
+> ) subtitle("All Workers, 12-month Percent Change") legend(label(2 "Civilian")
+>  label(3 "Private") label(4 "Public") label(5 "CPI")      size(vsmall) col(3)
+>  order( 2 3 4 5)))
+. *       xtline value if time>=224,t(time) i(owner) overlay  xlab(224(4)${max_
+> time},labsize(small) angle(45)) xtick(#11) xtitle("") ytitle("Percent Change 
+> (%)") title("Employment Cost Index for Total Compensation") subtitle("All Wor
+> kers, 12-month Percent Change") legend(order(1 2 3 4) size(vsmall) col(4)) ad
+> dplot((line upper time if inrange(time, 240, ${max_time}), recast(area) color
+> (gs14) below))
+. *       sleep 5000
+.         graph save   "${output}/eci_tc_allworkers_recent.gph", replace
+(file /project/Analysis/Output/eci_tc_allworkers_recent.gph not found)
+file /project/Analysis/Output/eci_tc_allworkers_recent.gph saved
+
+.         graph export "${output}/eci_tc_allworkers_recent.pdf", replace
+file /project/Analysis/Output/eci_tc_allworkers_recent.pdf saved as PDF
+    format
+
+.         graph export "${output}/eci_tc_allworkers_recent.png", replace
+(file /project/Analysis/Output/eci_tc_allworkers_recent.png not found)
+file /project/Analysis/Output/eci_tc_allworkers_recent.png written in PNG forma
+> t
+
+. 
+.         keep time value owner
+
+.         reshape wide value, i(time) j(owner) 
+(j = 1 2 3 999)
+
+Data                               Long   ->   Wide
+-----------------------------------------------------------------------------
+Number of observations              348   ->   88          
+Number of variables                   3   ->   5           
+j variable (4 values)        owner_code   ->   (dropped)
+xij variables:
+                                  value   ->   value1 value2 ... value999
+-----------------------------------------------------------------------------
+
+.         label var value1 "Civilian"
+
+.         label var value2 "Private"
+
+.         label var value3 "Public"
+
+.         label var value999 "CPI"
+
+.         export excel  using "${output}/eci_tc_allworkers.xls",  firstrow(varl
+> abels) replace
+file /project/Analysis/Output/eci_tc_allworkers.xls saved
+
+.         restore 
+
+. 
+. 
+. *ECI for Total Benefits - by Class of Worker
+. preserve
+
+.         keep if area==99999 & estimate_code==3 & subcell==0 & ind==0 & occ==0
+(27,272 observations deleted)
+
+.         keep series_title id time value owner recession
+
+.         append using "${mod_data}/cpi_series.dta"
+(variable owner_code was byte, now float to accommodate using data's values)
+
+.         label define owner2 1 "Civilian" 2 "Private" 3 "Public" 999 "CPI"
+
+.         label values owner_code owner2
+
+.         sum value
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+       value |        348      3.1542    1.561057   -1.38974        7.3
+
+.         local vmax=r(max)
+
+.         local vmin=round(r(min),1)
+
+.         di "`vmin'"
+-1
+
+.         gen upper=`vmax'*recession
+(84 missing values generated)
+
+.         replace upper=`vmin' if upper==0
+(222 real changes made)
+
+.         sort time
+
+.         keep if time>=164
+(0 observations deleted)
+
+.         `all_shade' twoway (tsline value if owner==1 || tsline value if owner
+> ==2 || tsline value if owner==3 || tsline value if owner==999,  xlab(164(4)${
+> max_time},labsize(small) angle(45)) xtitle("") ytitle("Percent Change (%)") t
+> itle("Employment Cost Index for Total Benefits") subtitle("All Workers, 12-mo
+> nth Percent Change") legend(label(2 "Civilian") label(3 "Private") label(4 "P
+> ublic") label(5 "CPI")         size(vsmall) col(3) order( 2 3 4 5)))
+
+. *       twoway (area upper time, color(gs14) base(`vmin') ) (tsline value if 
+> owner==1) (tsline value if owner==2) (tsline value if owner==3) (tsline value
+>  if owner==999,  xlab(164(4)${max_time},labsize(small) angle(45)) xtitle("") 
+> ytitle("Percent Change (%)") title("Employment Cost Index for Total Benefits"
+> ) subtitle("All Workers, 12-month Percent Change") legend(label(2 "Civilian")
+>  label(3 "Private") label(4 "Public") label(5 "CPI")   size(vsmall) col(3) or
+> der( 2 3 4 5)))
+. *       xtline value,t(time) i(owner) overlay  xlab(164(4)${max_time},labsize
+> (small) angle(45)) xtitle("") ytitle("Percent Change (%)") title("Employment 
+> Cost Index for Total Benefits") subtitle("All Workers, 12-month Percent Chang
+> e") legend(order(1 2 3 4) size(vsmall) col(4)) addplot((line upper time if in
+> range(time, 164, 167), recast(area) color(gs14) base(-2)) (line upper time if
+>  inrange(time, 191, 197), recast(area) color(gs14) base(-2)) (line upper time
+>  if inrange(time, 240, ${max_time}), recast(area) color(gs14) base(-2) below)
+> )
+. *       sleep 5000
+.         graph save   "${output}/eci_tb_allworkers.gph", replace
+(file /project/Analysis/Output/eci_tb_allworkers.gph not found)
+file /project/Analysis/Output/eci_tb_allworkers.gph saved
+
+.         graph export "${output}/eci_tb_allworkers.pdf", replace
+file /project/Analysis/Output/eci_tb_allworkers.pdf saved as PDF format
+
+.         graph export "${output}/eci_tb_allworkers.png", replace
+(file /project/Analysis/Output/eci_tb_allworkers.png not found)
+file /project/Analysis/Output/eci_tb_allworkers.png written in PNG format
+
+. 
+.         drop upper
+
+.         sum value if time>=224
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+       value |        108    2.727665    1.086305   .5200377   7.036404
+
+.         local vmax=r(max)
+
+.         local vmin=round(r(min),1)
+
+.         di "`vmin'"
+1
+
+.         gen upper=`vmax'*recession
+(84 missing values generated)
+
+.         replace upper=`vmin' if upper==0
+(222 real changes made)
+
+.         sort time
+
+.         `recent_shade' twoway (tsline value if owner==1 & time>=224 || tsline
+>  value if owner==2 & time>=224 || tsline value if owner==3 & time>=224 || tsl
+> ine value if owner==999  & time>=224,  xlab(224(4)${max_time},labsize(small) 
+> angle(45)) xtick(#11) xtitle("") ytitle("Percent Change (%)")  title("Employm
+> ent Cost Index for Total Benefits") subtitle("All Workers, 12-month Percent C
+> hange") legend(label(2 "Civilian") label(3 "Private") label(4 "Public") label
+> (5 "CPI")         size(vsmall) col(3) order( 2 3 4 5)))
+
+. *       twoway (area upper time if time>=224, color(gs14) base(`vmin') ) (tsl
+> ine value if owner==1 & time>=224) (tsline value if owner==2 & time>=224) (ts
+> line value if owner==3 & time>=224) (tsline value if owner==999  & time>=224,
+>   xlab(224(4)${max_time},labsize(small) angle(45)) xtick(#11) xtitle("") ytit
+> le("Percent Change (%)")  title("Employment Cost Index for Total Benefits") s
+> ubtitle("All Workers, 12-month Percent Change") legend(label(2 "Civilian") la
+> bel(3 "Private") label(4 "Public") label(5 "CPI")         size(vsmall) col(3)
+>  order( 2 3 4 5)))
+. *       xtline value if time>=224,t(time) i(owner) overlay  xlab(224(4)${max_
+> time},labsize(small) angle(45)) xtick(#11) xtitle("") ytitle("Percent Change 
+> (%)") title("Employment Cost Index for Total Benefits") subtitle("All Workers
+> , 12-month Percent Change") legend(order(1 2 3 4) size(vsmall) col(4)) addplo
+> t((line upper time if inrange(time, 240, ${max_time}), recast(area) color(gs1
+> 4) base(-2) below))
+. *       sleep 5000
+.         graph save   "${output}/eci_tb_allworkers_recent.gph", replace
+(file /project/Analysis/Output/eci_tb_allworkers_recent.gph not found)
+file /project/Analysis/Output/eci_tb_allworkers_recent.gph saved
+
+.         graph export "${output}/eci_tb_allworkers_recent.pdf", replace
+file /project/Analysis/Output/eci_tb_allworkers_recent.pdf saved as PDF
+    format
+
+.         graph export "${output}/eci_tb_allworkers_recent.pdf", replace
+file /project/Analysis/Output/eci_tb_allworkers_recent.pdf saved as PDF
+    format
+
+. 
+.         keep time value owner
+
+.         reshape wide value, i(time) j(owner) 
+(j = 1 2 3 999)
+
+Data                               Long   ->   Wide
+-----------------------------------------------------------------------------
+Number of observations              348   ->   88          
+Number of variables                   3   ->   5           
+j variable (4 values)        owner_code   ->   (dropped)
+xij variables:
+                                  value   ->   value1 value2 ... value999
+-----------------------------------------------------------------------------
+
+.         label var value1 "Civilian"
+
+.         label var value2 "Private"
+
+.         label var value3 "Public"
+
+.         label var value999 "CPI"
+
+.         export excel  using "${output}/eci_tb_allworkers.xls",  firstrow(varl
+> abels) replace
+file /project/Analysis/Output/eci_tb_allworkers.xls saved
+
+.         restore 
+
+. 
+. 
+. *ECI for Total Compensation  - Private - Over Census Divisions
+. preserve
+
+.         keep if owner==2 & estimate_code==1 & subcell==0 & ind==0 & occ==0 
+(25,498 observations deleted)
+
+.         keep if area>=99100 & area<=99190
+(1,426 observations deleted)
+
+.         label define area2 99100 "New England" 99120 "Middle Atlantic" 99130 
+> "East South Central" 99140 "South Atlantic" 99150 "East North Central" 99160 
+> "West North Central" 99170 "West South Central" 99180 "Mountain" 99190 "Pacif
+> ic" 
+
+.         label values area area2
+
+.         sum value
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+       value |        585    2.587009    1.061565         .2        7.5
+
+.         local vmax=r(max)
+
+.         local vmin=round(r(min),1)
+
+.         di "`vmin'"
+0
+
+.         gen upper=`vmax'*recession
+
+.         replace upper=`vmin' if upper==0
+(0 real changes made)
+
+.         sort time
+
+.         keep if time>=164
+(0 observations deleted)
+
+.         `regions_shade' twoway (tsline value if area==99100 & time>=184 || ts
+> line value if area==99120 & time>=184 || tsline value if area==99130 & time>=
+> 184 || tsline value if area==99140 & time>=184 || tsline value if area==99150
+>  & time>=184 || tsline value if area==99160 & time>=184 || tsline value if ar
+> ea==99170 & time>=184 || tsline value if area==99180 & time>=184 || tsline va
+> lue if area==99190 & time>=184,  xlab(184(4)${max_time},labsize(small) angle(
+> 45)) xtitle("") ytitle("Percent Change (%)") title("Employment Cost Index for
+>  Total Compensation") subtitle("Private Workers, 12-month Percent Change") le
+> gend(label(2 "New England") label(3 "Middle Atlantic") label(4 "East South Ce
+> ntral") label(5 "South Atlantic") label(6 "East North Central") label(7 "West
+>  North Central") label(8 "West South Central") label(9 "Mountain") label(10 "
+> Pacific")        size(vsmall) col(3) order( 2 3 4 5 6 7 8 9 10)))
+
+. *       twoway (area upper time if time>=184, color(gs14) base(`vmin') ) (tsl
+> ine value if area==99100 & time>=184) (tsline value if area==99120 & time>=18
+> 4) (tsline value if area==99130 & time>=184) (tsline value if area==99140 & t
+> ime>=184) (tsline value if area==99150 & time>=184) (tsline value if area==99
+> 160 & time>=184) (tsline value if area==99170 & time>=184) (tsline value if a
+> rea==99180 & time>=184) (tsline value if area==99190 & time>=184,  xlab(184(4
+> )${max_time},labsize(small) angle(45)) xtitle("") ytitle("Percent Change (%)"
+> ) title("Employment Cost Index for Total Compensation") subtitle("Private Wor
+> kers, 12-month Percent Change") legend(label(2 "New England") label(3 "Middle
+>  Atlantic") label(4 "East South Central") label(5 "South Atlantic") label(6 "
+> East North Central") label(7 "West North Central") label(8 "West South Centra
+> l") label(9 "Mountain") label(10 "Pacific")      size(vsmall) col(3) order( 2
+>  3 4 5 6 7 8 9 10)))
+. *       xtline value if time>=224,t(time) i(area) overlay  xlab(224(4)${max_t
+> ime},labsize(small) angle(45)) xtick(#11) xtitle("") ytitle("Percent Change (
+> %)") title("Employment Cost Index for Total Compensation") subtitle("Private 
+> Workers, 12-month Percent Change") legend(size(vsmall) col(3) order(1 2 3 4 5
+>  6 7 8 9)) addplot((line upper time if inrange(time, 240, ${max_time}), recas
+> t(area) color(gs14) base(-2) below))
+. *       sleep 5000
+.         graph save   "${output}/eci_tc_regions.gph", replace
+(file /project/Analysis/Output/eci_tc_regions.gph not found)
+file /project/Analysis/Output/eci_tc_regions.gph saved
+
+.         graph export "${output}/eci_tc_regions.pdf", replace
+file /project/Analysis/Output/eci_tc_regions.pdf saved as PDF format
+
+.         graph export "${output}/eci_tc_regions.png", replace
+(file /project/Analysis/Output/eci_tc_regions.png not found)
+file /project/Analysis/Output/eci_tc_regions.png written in PNG format
+
+.         tab area, gen(xarea_)
+
+         area_code |      Freq.     Percent        Cum.
+-------------------+-----------------------------------
+       New England |         68       11.11       11.11
+   Middle Atlantic |         68       11.11       22.22
+East South Central |         68       11.11       33.33
+    South Atlantic |         68       11.11       44.44
+East North Central |         68       11.11       55.56
+West North Central |         68       11.11       66.67
+West South Central |         68       11.11       77.78
+          Mountain |         68       11.11       88.89
+           Pacific |         68       11.11      100.00
+-------------------+-----------------------------------
+             Total |        612      100.00
+
+.         forvalues i=1(1)9 {
+  2.                 local x1: variable label xarea_`i'
+  3.                 local ylbl_`i' = substr("`x1'",12,.)
+  4.                 }
+
+.         keep time value area
+
+.         reshape wide value, i(time) j(area) 
+(j = 99100 99120 99130 99140 99150 99160 99170 99180 99190)
+
+Data                               Long   ->   Wide
+-----------------------------------------------------------------------------
+Number of observations              612   ->   68          
+Number of variables                   3   ->   10          
+j variable (9 values)         area_code   ->   (dropped)
+xij variables:
+                                  value   ->   value99100 value99120 ... value9
+> 9190
+-----------------------------------------------------------------------------
+
+.         local i=1
+
+.         foreach y in value99100 value99120 value99130 value99140 value99150 v
+> alue99160 value99170 value99180 value99190 {
+  2.                 label var `y' "`ylbl_`i''"
+  3.                 local i=`i'+1
+  4.                 }
+
+.         export excel  using "${output}/eci_tc_regions.xls",  firstrow(varlabe
+> ls) replace
+file /project/Analysis/Output/eci_tc_regions.xls saved
+
+.         restore 
+
+. 
+end of do-file
+
+. 
+. log close
+      name:  <unnamed>
+       log:  /project/Analysis/Log_Files/ecec_2023_02_08.log
+  log type:  text
+ closed on:   8 Feb 2023, 23:04:18
+-------------------------------------------------------------------------------
