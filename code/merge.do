@@ -118,7 +118,7 @@ label define occ_lbl 530000 `"Transportation and material moving occupations"', 
 label define occ_lbl 999999 `"Discontinued Codes"', add
 // added in February 2023 - new codes
 label define occ_lbl 430009	`"Office and administrative support occupations (SOC 2010) 43000D"', add
-label define occ_lbl 530009	`"Transportation and material moving occupations (SOC 2010)	53000D"'
+label define occ_lbl 530009	`"Transportation and material moving occupations (SOC 2010)	53000D"', add
 label values occupation_code occ_lbl
 
 
