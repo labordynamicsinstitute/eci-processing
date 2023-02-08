@@ -67,19 +67,19 @@ rootdir: /project
 . ls
 
 total 60
-drwxr-xr-x 2 1001 123 4096 Feb  8 23:03 assets/
--rwxr-xr-x 1 1001 123  956 Feb  8 23:03 build.sh*
-drwxrwxrwx 2 1001 123 4096 Feb  8 23:03 code/
--rw-r--r-- 1 1001 123  104 Feb  8 23:03 config.txt
-drwxrwxrwx 2 1001 123 4096 Feb  8 23:03 data/
--rw-r--r-- 1 1001 123  709 Feb  8 23:03 Dockerfile
--rw-r--r-- 1 1001 123  119 Feb  8 23:03 init.config.txt
--rw-r--r-- 1 1001 123 1690 Feb  8 23:03 LICENSE
--rw-r--r-- 1 1001 123 8329 Feb  8 23:03 README.md
--rwxr-xr-x 1 1001 123 1769 Feb  8 23:03 run.sh*
--rw-r--r-- 1 1001 123   50 Feb  8 23:03 set_key.do
--rw-r--r-- 1 1001 123  656 Feb  8 23:03 setup.do
--rw-r--r-- 1 1001 123  128 Feb  8 23:03 stata.lic
+drwxr-xr-x 2 1001 123 4096 Feb  8 23:12 assets/
+-rwxr-xr-x 1 1001 123  956 Feb  8 23:12 build.sh*
+drwxrwxrwx 2 1001 123 4096 Feb  8 23:12 code/
+-rw-r--r-- 1 1001 123  104 Feb  8 23:12 config.txt
+drwxrwxrwx 2 1001 123 4096 Feb  8 23:12 data/
+-rw-r--r-- 1 1001 123  709 Feb  8 23:12 Dockerfile
+-rw-r--r-- 1 1001 123  119 Feb  8 23:12 init.config.txt
+-rw-r--r-- 1 1001 123 1690 Feb  8 23:12 LICENSE
+-rw-r--r-- 1 1001 123 8329 Feb  8 23:12 README.md
+-rwxr-xr-x 1 1001 123 1769 Feb  8 23:12 run.sh*
+-rw-r--r-- 1 1001 123   50 Feb  8 23:12 set_key.do
+-rw-r--r-- 1 1001 123  656 Feb  8 23:12 setup.do
+-rw-r--r-- 1 1001 123  128 Feb  8 23:12 stata.lic
 
 . 
 . foreach dir in datadir outputs raw_data mod_data clean_data output log {
@@ -98,7 +98,7 @@ drwxrwxrwx 2 1001 123 4096 Feb  8 23:03 data/
       name:  <unnamed>
        log:  /project/Analysis/Log_Files/ecec_2023_02_08.log
   log type:  text
- opened on:   8 Feb 2023, 23:03:44
+ opened on:   8 Feb 2023, 23:12:51
 
 . 
 . /*Notes:
@@ -1875,7 +1875,7 @@ end of do-file
       name:  <unnamed>
        log:  /project/Analysis/Log_Files/ecec_2023_02_08.log
   log type:  text
- closed on:   8 Feb 2023, 23:04:18
+ closed on:   8 Feb 2023, 23:13:30
 -------------------------------------------------------------------------------
 
 . 
