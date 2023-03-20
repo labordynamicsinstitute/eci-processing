@@ -1,8 +1,8 @@
 -------------------------------------------------------------------------------
       name:  <unnamed>
-       log:  /project/Analysis/Log_Files/ecec_2023_03_18.log
+       log:  /project/Analysis/Log_Files/ecec_2023_03_20.log
   log type:  text
- opened on:  18 Mar 2023, 20:43:48
+ opened on:  20 Mar 2023, 14:46:18
 
 . 
 . /*Notes:
@@ -1777,7 +1777,7 @@ end of do-file
 . 
 . log close
       name:  <unnamed>
-       log:  /project/Analysis/Log_Files/ecec_2023_03_18.log
+       log:  /project/Analysis/Log_Files/ecec_2023_03_20.log
   log type:  text
- closed on:  18 Mar 2023, 20:44:25
+ closed on:  20 Mar 2023, 14:46:54
 -------------------------------------------------------------------------------

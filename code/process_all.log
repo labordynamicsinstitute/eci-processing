@@ -66,20 +66,20 @@ rootdir: /project
 
 . ls
 
-total 60
-drwxr-xr-x 2 1001 123 4096 Mar 18 20:43 assets/
--rwxr-xr-x 1 1001 123  956 Mar 18 20:43 build.sh*
-drwxrwxrwx 2 1001 123 4096 Mar 18 20:43 code/
--rw-r--r-- 1 1001 123  104 Mar 18 20:43 config.txt
-drwxrwxrwx 2 1001 123 4096 Mar 18 20:43 data/
--rw-r--r-- 1 1001 123  709 Mar 18 20:43 Dockerfile
--rw-r--r-- 1 1001 123  119 Mar 18 20:43 init.config.txt
--rw-r--r-- 1 1001 123 1690 Mar 18 20:43 LICENSE
--rw-r--r-- 1 1001 123 8329 Mar 18 20:43 README.md
--rwxr-xr-x 1 1001 123 1769 Mar 18 20:43 run.sh*
--rw-r--r-- 1 1001 123   50 Mar 18 20:43 set_key.do
--rw-r--r-- 1 1001 123  656 Mar 18 20:43 setup.do
--rw-r--r-- 1 1001 123  128 Mar 18 20:43 stata.lic
+total 52
+drwxr-xr-x 2 1001 123 4096 Mar 20 14:45 assets/
+-rwxr-xr-x 1 1001 123  956 Mar 20 14:45 build.sh*
+drwxrwxrwx 2 1001 123 4096 Mar 20 14:46 code/
+-rw-r--r-- 1 1001 123  104 Mar 20 14:45 config.txt
+drwxrwxrwx 2 1001 123 4096 Mar 20 14:45 data/
+-rw-r--r-- 1 1001 123  709 Mar 20 14:45 Dockerfile
+-rw-r--r-- 1 1001 123  119 Mar 20 14:45 init.config.txt
+-rw-r--r-- 1 1001 123 1690 Mar 20 14:45 LICENSE
+-rw-r--r-- 1 1001 123 2347 Mar 20 14:45 README.md
+-rwxr-xr-x 1 1001 123 1769 Mar 20 14:45 run.sh*
+-rw-r--r-- 1 1001 123   50 Mar 20 14:45 set_key.do
+-rw-r--r-- 1 1001 123  656 Mar 20 14:45 setup.do
+-rw-r--r-- 1 1001 123  128 Mar 20 14:45 stata.lic
 
 . 
 . foreach dir in datadir outputs raw_data mod_data clean_data output log {
@@ -93,12 +93,12 @@ drwxrwxrwx 2 1001 123 4096 Mar 18 20:43 data/
 > )," ","_",2)
 
 . log using "${log}/ecec_`timestamp'.log", replace text
-(file /project/Analysis/Log_Files/ecec_2023_03_18.log not found)
+(file /project/Analysis/Log_Files/ecec_2023_03_20.log not found)
 -------------------------------------------------------------------------------
       name:  <unnamed>
-       log:  /project/Analysis/Log_Files/ecec_2023_03_18.log
+       log:  /project/Analysis/Log_Files/ecec_2023_03_20.log
   log type:  text
- opened on:  18 Mar 2023, 20:43:48
+ opened on:  20 Mar 2023, 14:46:18
 
 . 
 . /*Notes:
@@ -1873,9 +1873,9 @@ end of do-file
 . 
 . log close
       name:  <unnamed>
-       log:  /project/Analysis/Log_Files/ecec_2023_03_18.log
+       log:  /project/Analysis/Log_Files/ecec_2023_03_20.log
   log type:  text
- closed on:  18 Mar 2023, 20:44:25
+ closed on:  20 Mar 2023, 14:46:54
 -------------------------------------------------------------------------------
 
 . 
