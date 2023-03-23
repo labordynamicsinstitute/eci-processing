@@ -38,13 +38,13 @@ log using "${log}/ecec_`timestamp'.log", replace text
 
 
 *Specify globals used in command files
-global max_time=247
+global max_time=string(qofd(date(c(current_date),"DMY")))
 
 /* verify if "set_key.do" is there */
 
-capture confirm file set_key.do
+capture confirm file "${rootdir}/set_key.do"
 if _rc == 0 {
-    run set_key.do
+    run "${rootdir}/set_key.do"
 	set fredkey $FREDKEY
 }
 else { 

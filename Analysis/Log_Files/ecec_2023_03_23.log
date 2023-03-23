@@ -1,8 +1,8 @@
 -------------------------------------------------------------------------------
       name:  <unnamed>
-       log:  /project/Analysis/Log_Files/ecec_2023_03_20.log
+       log:  /project/Analysis/Log_Files/ecec_2023_03_23.log
   log type:  text
- opened on:  20 Mar 2023, 14:46:18
+ opened on:  23 Mar 2023, 13:51:36
 
 . 
 . /*Notes:
@@ -15,15 +15,15 @@
 . 
 . 
 . *Specify globals used in command files
-. global max_time=247
+. global max_time=string(qofd(date(c(current_date),"DMY")))
 
 . 
 . /* verify if "set_key.do" is there */
 . 
-. capture confirm file set_key.do
+. capture confirm file "${rootdir}/set_key.do"
 
 . if _rc == 0 {
-.     run set_key.do
+.     run "${rootdir}/set_key.do"
 .         set fredkey $FREDKEY
 . }
 
@@ -253,7 +253,7 @@ file /project/data/modified/cpi.dta saved
 . 
 . *make series style data
 . keep if time>=164 & time<=${max_time}
-(357 observations deleted)
+(352 observations deleted)
 
 . keep time cpi_12mo
 
@@ -878,10 +878,10 @@ v2 generated as str3
 .         gen marker2=marker
 
 .         replace marker="" if time==${max_time}
-(1 real change made)
+(0 real changes made)
 
 .         replace marker2="" if time<${max_time}
-(83 real changes made)
+(88 real changes made)
 
 .         twoway   (line upper time if inrange(time, 164, 167), recast(area) co
 > lor(gs14)) (line upper time if inrange(time, 191, 197), recast(area) color(gs
@@ -1330,7 +1330,7 @@ file /project/Analysis/Output/eci_ws_allprivate_allocc.xls saved
 
     Variable |        Obs        Mean    Std. dev.       Min        Max
 -------------+---------------------------------------------------------
-       value |        348    2.696442    1.052459   -1.38974   7.036404
+       value |        353    2.761495     1.18514   -1.38974   8.607625
 
 .         local vmax=r(max)
 
@@ -1340,7 +1340,7 @@ file /project/Analysis/Output/eci_ws_allprivate_allocc.xls saved
 -1
 
 .         gen upper=`vmax'*recession
-(84 missing values generated)
+(89 missing values generated)
 
 .         replace upper=`vmin' if upper==0
 (222 real changes made)
@@ -1391,7 +1391,7 @@ file /project/Analysis/Output/eci_tc_allworkers.png written in PNG format
 
     Variable |        Obs        Mean    Std. dev.       Min        Max
 -------------+---------------------------------------------------------
-       value |        108    2.806369    1.070667   .5200377   7.036404
+       value |        113    3.004723     1.41661   .5200377   8.607625
 
 .         local vmax=r(max)
 
@@ -1401,7 +1401,7 @@ file /project/Analysis/Output/eci_tc_allworkers.png written in PNG format
 1
 
 .         gen upper=`vmax'*recession
-(84 missing values generated)
+(89 missing values generated)
 
 .         replace upper=`vmin' if upper==0
 (222 real changes made)
@@ -1452,7 +1452,7 @@ file /project/Analysis/Output/eci_tc_allworkers_recent.png written in PNG forma
 
 Data                               Long   ->   Wide
 -----------------------------------------------------------------------------
-Number of observations              348   ->   88          
+Number of observations              353   ->   89          
 Number of variables                   3   ->   5           
 j variable (4 values)        owner_code   ->   (dropped)
 xij variables:
@@ -1494,7 +1494,7 @@ file /project/Analysis/Output/eci_tc_allworkers.xls saved
 
     Variable |        Obs        Mean    Std. dev.       Min        Max
 -------------+---------------------------------------------------------
-       value |        348      3.1542    1.561057   -1.38974        7.3
+       value |        353    3.212769    1.630632   -1.38974   8.607625
 
 .         local vmax=r(max)
 
@@ -1504,7 +1504,7 @@ file /project/Analysis/Output/eci_tc_allworkers.xls saved
 -1
 
 .         gen upper=`vmax'*recession
-(84 missing values generated)
+(89 missing values generated)
 
 .         replace upper=`vmin' if upper==0
 (222 real changes made)
@@ -1555,7 +1555,7 @@ file /project/Analysis/Output/eci_tb_allworkers.png written in PNG format
 
     Variable |        Obs        Mean    Std. dev.       Min        Max
 -------------+---------------------------------------------------------
-       value |        108    2.727665    1.086305   .5200377   7.036404
+       value |        113    2.929502    1.438535   .5200377   8.607625
 
 .         local vmax=r(max)
 
@@ -1565,7 +1565,7 @@ file /project/Analysis/Output/eci_tb_allworkers.png written in PNG format
 1
 
 .         gen upper=`vmax'*recession
-(84 missing values generated)
+(89 missing values generated)
 
 .         replace upper=`vmin' if upper==0
 (222 real changes made)
@@ -1615,7 +1615,7 @@ file /project/Analysis/Output/eci_tb_allworkers_recent.pdf saved as PDF
 
 Data                               Long   ->   Wide
 -----------------------------------------------------------------------------
-Number of observations              348   ->   88          
+Number of observations              353   ->   89          
 Number of variables                   3   ->   5           
 j variable (4 values)        owner_code   ->   (dropped)
 xij variables:
@@ -1777,7 +1777,7 @@ end of do-file
 . 
 . log close
       name:  <unnamed>
-       log:  /project/Analysis/Log_Files/ecec_2023_03_20.log
+       log:  /project/Analysis/Log_Files/ecec_2023_03_23.log
   log type:  text
- closed on:  20 Mar 2023, 14:46:54
+ closed on:  23 Mar 2023, 13:52:12
 -------------------------------------------------------------------------------
