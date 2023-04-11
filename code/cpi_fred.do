@@ -37,5 +37,7 @@ gen owner_code = 999
 rename cpi value
 order series_title id time value owner_code
 save "${mod_data}/cpi_series.dta", replace
+export excel  using "${output}/cpi_series.xlsx",  firstrow(varlabels) replace
+
 
 
