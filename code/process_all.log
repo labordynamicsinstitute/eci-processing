@@ -10,7 +10,7 @@ ___/   /   /___/   /   /___/       MP—Parallel Edition
                                    800-STATA-PC        https://www.stata.com
                                    979-696-4600        stata@stata.com
 
-Stata license: 2-user 32-core network, expiring 27 Apr 2023
+Stata license: 2-user 32-core network, expiring 27 Apr 2024
 Serial number: 501709300062
   Licensed to: Lars Vilhuber (Data Editor)
                American Economic Association
@@ -67,19 +67,19 @@ rootdir: /project
 . ls
 
 total 52
-drwxr-xr-x 2 1001 123 4096 Mar 23 13:51 assets/
--rwxr-xr-x 1 1001 123  956 Mar 23 13:51 build.sh*
-drwxrwxrwx 2 1001 123 4096 Mar 23 13:51 code/
--rw-r--r-- 1 1001 123  104 Mar 23 13:51 config.txt
-drwxrwxrwx 2 1001 123 4096 Mar 23 13:51 data/
--rw-r--r-- 1 1001 123  709 Mar 23 13:51 Dockerfile
--rw-r--r-- 1 1001 123  119 Mar 23 13:51 init.config.txt
--rw-r--r-- 1 1001 123 1690 Mar 23 13:51 LICENSE
--rw-r--r-- 1 1001 123 2347 Mar 23 13:51 README.md
--rwxr-xr-x 1 1001 123 1769 Mar 23 13:51 run.sh*
--rw-r--r-- 1 1001 123   50 Mar 23 13:51 set_key.do
--rw-r--r-- 1 1001 123  656 Mar 23 13:51 setup.do
--rw-r--r-- 1 1001 123  128 Mar 23 13:51 stata.lic
+drwxr-xr-x 2 1001 123 4096 Apr 11 20:26 assets/
+-rwxr-xr-x 1 1001 123  956 Apr 11 20:26 build.sh*
+drwxrwxrwx 2 1001 123 4096 Apr 11 20:27 code/
+-rw-r--r-- 1 1001 123  104 Apr 11 20:26 config.txt
+drwxrwxrwx 2 1001 123 4096 Apr 11 20:26 data/
+-rw-r--r-- 1 1001 123  709 Apr 11 20:26 Dockerfile
+-rw-r--r-- 1 1001 123  119 Apr 11 20:26 init.config.txt
+-rw-r--r-- 1 1001 123 1690 Apr 11 20:26 LICENSE
+-rw-r--r-- 1 1001 123 2347 Apr 11 20:26 README.md
+-rwxr-xr-x 1 1001 123 1769 Apr 11 20:26 run.sh*
+-rw-r--r-- 1 1001 123   50 Apr 11 20:26 set_key.do
+-rw-r--r-- 1 1001 123  656 Apr 11 20:26 setup.do
+-rw-r--r-- 1 1001 123  119 Apr 11 20:26 stata.lic
 
 . 
 . foreach dir in datadir outputs raw_data mod_data clean_data output log {
@@ -93,12 +93,12 @@ drwxrwxrwx 2 1001 123 4096 Mar 23 13:51 data/
 > )," ","_",2)
 
 . log using "${log}/ecec_`timestamp'.log", replace text
-(file /project/Analysis/Log_Files/ecec_2023_03_23.log not found)
+(file /project/Analysis/Log_Files/ecec_2023_04_11.log not found)
 -------------------------------------------------------------------------------
       name:  <unnamed>
-       log:  /project/Analysis/Log_Files/ecec_2023_03_23.log
+       log:  /project/Analysis/Log_Files/ecec_2023_04_11.log
   log type:  text
- opened on:  23 Mar 2023, 13:51:36
+ opened on:  11 Apr 2023, 20:27:23
 
 . 
 . /*Notes:
@@ -233,6 +233,12 @@ file /project/data/raw/fseries.dta saved
 file /project/data/raw/fsubcell.dta saved
 
 .         
+.         // save the series file for reference to outputs
+.         export excel  using "${output}/fseries.xlsx",  firstrow(varlabels) re
+> place
+file /project/Analysis/Output/fseries.xlsx saved
+
+. 
 .         
 . *Three files have odd naming structure and require different commands
 .         clear
@@ -367,6 +373,10 @@ file /project/data/modified/cpi.dta saved
 (file /project/data/modified/cpi_series.dta not found)
 file /project/data/modified/cpi_series.dta saved
 
+. export excel  using "${output}/cpi_series.xlsx",  firstrow(varlabels) replace
+file /project/Analysis/Output/cpi_series.xlsx saved
+
+. 
 . 
 . 
 . 
@@ -1873,9 +1883,9 @@ end of do-file
 . 
 . log close
       name:  <unnamed>
-       log:  /project/Analysis/Log_Files/ecec_2023_03_23.log
+       log:  /project/Analysis/Log_Files/ecec_2023_04_11.log
   log type:  text
- closed on:  23 Mar 2023, 13:52:12
+ closed on:  11 Apr 2023, 20:27:59
 -------------------------------------------------------------------------------
 
 . 

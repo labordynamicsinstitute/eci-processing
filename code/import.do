@@ -8,6 +8,9 @@ foreach y in area aspect contacts   estimate footnote industry occupation owner 
 	save "${raw_data}/f`y'.dta", replace
 	}
 	
+	// save the series file for reference to outputs
+	export excel  using "${output}/fseries.xlsx",  firstrow(varlabels) replace
+
 	
 *Three files have odd naming structure and require different commands
 	clear

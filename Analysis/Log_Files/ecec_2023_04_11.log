@@ -1,8 +1,8 @@
 -------------------------------------------------------------------------------
       name:  <unnamed>
-       log:  /project/Analysis/Log_Files/ecec_2023_03_23.log
+       log:  /project/Analysis/Log_Files/ecec_2023_04_11.log
   log type:  text
- opened on:  23 Mar 2023, 13:51:36
+ opened on:  11 Apr 2023, 20:27:23
 
 . 
 . /*Notes:
@@ -137,6 +137,12 @@ file /project/data/raw/fseries.dta saved
 file /project/data/raw/fsubcell.dta saved
 
 .         
+.         // save the series file for reference to outputs
+.         export excel  using "${output}/fseries.xlsx",  firstrow(varlabels) re
+> place
+file /project/Analysis/Output/fseries.xlsx saved
+
+. 
 .         
 . *Three files have odd naming structure and require different commands
 .         clear
@@ -271,6 +277,10 @@ file /project/data/modified/cpi.dta saved
 (file /project/data/modified/cpi_series.dta not found)
 file /project/data/modified/cpi_series.dta saved
 
+. export excel  using "${output}/cpi_series.xlsx",  firstrow(varlabels) replace
+file /project/Analysis/Output/cpi_series.xlsx saved
+
+. 
 . 
 . 
 . 
@@ -1777,7 +1787,7 @@ end of do-file
 . 
 . log close
       name:  <unnamed>
-       log:  /project/Analysis/Log_Files/ecec_2023_03_23.log
+       log:  /project/Analysis/Log_Files/ecec_2023_04_11.log
   log type:  text
- closed on:  23 Mar 2023, 13:52:12
+ closed on:  11 Apr 2023, 20:27:59
 -------------------------------------------------------------------------------
