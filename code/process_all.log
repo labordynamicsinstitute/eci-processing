@@ -69,7 +69,7 @@ rootdir: /project
 total 52
 drwxr-xr-x 2 1001 123 4096 Apr 28 12:50 assets/
 -rwxr-xr-x 1 1001 123  956 Apr 28 12:50 build.sh*
-drwxrwxrwx 2 1001 123 4096 Apr 28 12:50 code/
+drwxrwxrwx 2 1001 123 4096 Apr 28 12:51 code/
 -rw-r--r-- 1 1001 123  104 Apr 28 12:50 config.txt
 drwxrwxrwx 2 1001 123 4096 Apr 28 12:50 data/
 -rw-r--r-- 1 1001 123  709 Apr 28 12:50 Dockerfile
@@ -98,7 +98,7 @@ drwxrwxrwx 2 1001 123 4096 Apr 28 12:50 data/
       name:  <unnamed>
        log:  /project/Analysis/Log_Files/ecec_2023_04_28.log
   log type:  text
- opened on:  28 Apr 2023, 12:50:48
+ opened on:  28 Apr 2023, 12:51:05
 
 . 
 . /*Notes:
@@ -1885,7 +1885,7 @@ end of do-file
       name:  <unnamed>
        log:  /project/Analysis/Log_Files/ecec_2023_04_28.log
   log type:  text
- closed on:  28 Apr 2023, 12:51:27
+ closed on:  28 Apr 2023, 12:51:49
 -------------------------------------------------------------------------------
 
 . 
