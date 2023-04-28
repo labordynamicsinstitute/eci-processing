@@ -67,19 +67,19 @@ rootdir: /project
 . ls
 
 total 52
-drwxr-xr-x 2 1001 123 4096 Apr 11 20:55 assets/
--rwxr-xr-x 1 1001 123  956 Apr 11 20:55 build.sh*
-drwxrwxrwx 2 1001 123 4096 Apr 11 20:56 code/
--rw-r--r-- 1 1001 123  104 Apr 11 20:55 config.txt
-drwxrwxrwx 2 1001 123 4096 Apr 11 20:55 data/
--rw-r--r-- 1 1001 123  709 Apr 11 20:55 Dockerfile
--rw-r--r-- 1 1001 123  119 Apr 11 20:55 init.config.txt
--rw-r--r-- 1 1001 123 1690 Apr 11 20:55 LICENSE
--rw-r--r-- 1 1001 123 2347 Apr 11 20:55 README.md
--rwxr-xr-x 1 1001 123 1769 Apr 11 20:55 run.sh*
--rw-r--r-- 1 1001 123   50 Apr 11 20:55 set_key.do
--rw-r--r-- 1 1001 123  656 Apr 11 20:55 setup.do
--rw-r--r-- 1 1001 123  119 Apr 11 20:55 stata.lic
+drwxr-xr-x 2 1001 123 4096 Apr 28 12:32 assets/
+-rwxr-xr-x 1 1001 123  956 Apr 28 12:32 build.sh*
+drwxrwxrwx 2 1001 123 4096 Apr 28 12:33 code/
+-rw-r--r-- 1 1001 123  104 Apr 28 12:32 config.txt
+drwxrwxrwx 2 1001 123 4096 Apr 28 12:32 data/
+-rw-r--r-- 1 1001 123  709 Apr 28 12:32 Dockerfile
+-rw-r--r-- 1 1001 123  119 Apr 28 12:32 init.config.txt
+-rw-r--r-- 1 1001 123 1690 Apr 28 12:32 LICENSE
+-rw-r--r-- 1 1001 123 2347 Apr 28 12:32 README.md
+-rwxr-xr-x 1 1001 123 1769 Apr 28 12:32 run.sh*
+-rw-r--r-- 1 1001 123   50 Apr 28 12:32 set_key.do
+-rw-r--r-- 1 1001 123  656 Apr 28 12:32 setup.do
+-rw-r--r-- 1 1001 123  119 Apr 28 12:32 stata.lic
 
 . 
 . foreach dir in datadir outputs raw_data mod_data clean_data output log {
@@ -93,12 +93,12 @@ drwxrwxrwx 2 1001 123 4096 Apr 11 20:55 data/
 > )," ","_",2)
 
 . log using "${log}/ecec_`timestamp'.log", replace text
-(file /project/Analysis/Log_Files/ecec_2023_04_11.log not found)
+(file /project/Analysis/Log_Files/ecec_2023_04_28.log not found)
 -------------------------------------------------------------------------------
       name:  <unnamed>
-       log:  /project/Analysis/Log_Files/ecec_2023_04_11.log
+       log:  /project/Analysis/Log_Files/ecec_2023_04_28.log
   log type:  text
- opened on:  11 Apr 2023, 20:56:13
+ opened on:  28 Apr 2023, 12:33:02
 
 . 
 . /*Notes:
@@ -178,7 +178,7 @@ installation complete.
 file /project/data/raw/farea.dta saved
 (file faspect.txt not found)
 (encoding automatically selected: ISO-8859-1)
-(6 vars, 177,838 obs)
+(6 vars, 179,845 obs)
 (file /project/data/raw/faspect.dta not found)
 file /project/data/raw/faspect.dta saved
 (file fcontacts.txt not found)
@@ -250,7 +250,7 @@ file /project/Analysis/Output/fseries.xlsx saved
 .         import delimited "${raw_data}/fcurrent.txt", delimiter(tab) stringcol
 > s(_all)
 (encoding automatically selected: ISO-8859-1)
-(5 vars, 72,344 obs)
+(5 vars, 74,351 obs)
 
 .         save "${raw_data}/fcurrent.dta", replace
 (file /project/data/raw/fcurrent.dta not found)
@@ -266,7 +266,7 @@ file /project/data/raw/fcurrent.dta saved
 .         import delimited "${raw_data}/falldata.txt", delimiter(tab) stringcol
 > s(_all)
 (encoding automatically selected: ISO-8859-1)
-(5 vars, 177,838 obs)
+(5 vars, 179,845 obs)
 
 .         save "${raw_data}/falldata.dta", replace
 (file /project/data/raw/falldata.dta not found)
@@ -305,7 +305,7 @@ Summary
 -------------------------------------------------------------------------------
 Series ID                    Nobs    Date range                Frequency
 -------------------------------------------------------------------------------
-CPIAUCNS                     1322    1913-01-01 to 2023-02-01  Monthly
+CPIAUCNS                     1323    1913-01-01 to 2023-03-01  Monthly
 -------------------------------------------------------------------------------
 # of series imported: 1
    highest frequency: Monthly
@@ -399,7 +399,7 @@ end of do-file
     Result                      Number of obs
     -----------------------------------------
     Not matched                             0
-    Matched                           177,838  (_merge==3)
+    Matched                           179,845  (_merge==3)
     -----------------------------------------
 
 .         *confirm everything merged properly
@@ -413,7 +413,7 @@ end of do-file
 
 . *drop 3 month change series 
 . drop if periodicity_code=="Q"
-(37,046 observations deleted)
+(37,478 observations deleted)
 
 . 
 . *Owner
@@ -442,19 +442,19 @@ owner_code: all characters numeric; replaced as byte
 . 
 . *Industry
 .         replace industry_code="520100" if industry_code=="520A00"
-(1,970 real changes made)
+(1,992 real changes made)
 
 .         replace industry_code="540100" if industry_code=="540A00"
-(1,056 real changes made)
+(1,068 real changes made)
 
 .         replace industry_code="999999" if industry_code=="DISCON"
 (0 real changes made)
 
 .         replace industry_code="991000" if industry_code=="G00000"
-(9,538 real changes made)
+(9,638 real changes made)
 
 .         replace industry_code="992000" if industry_code=="S00000"
-(10,418 real changes made)
+(10,528 real changes made)
 
 .         destring industry_code, replace
 industry_code: all characters numeric; replaced as long
@@ -797,7 +797,7 @@ value: all characters numeric; replaced as double
 . xtset id time
 
 Panel variable: id (unbalanced)
- Time variable: time, 1982q1 to 2022q4
+ Time variable: time, 1982q1 to 2023q1
          Delta: 1 quarter
 
 . 
@@ -807,7 +807,7 @@ Panel variable: id (unbalanced)
 . preserve
 
 . keep if series_id=="CIU1010000000000A"
-(140,704 observations deleted)
+(142,278 observations deleted)
 
 . qui sum id
 
@@ -818,7 +818,7 @@ Panel variable: id (unbalanced)
 . restore, preserve
 
 . keep if series_id=="CIU1020000000000A"
-(140,704 observations deleted)
+(142,278 observations deleted)
 
 . qui sum id
 
@@ -829,7 +829,7 @@ Panel variable: id (unbalanced)
 . restore, preserve
 
 . keep if series_id=="CIU1030000000000A"
-(140,704 observations deleted)
+(142,278 observations deleted)
 
 . qui sum id
 
@@ -856,7 +856,7 @@ Panel variable: id (unbalanced)
 . preserve
 
 .         keep if seasonal=="S"
-(129,204 observations deleted)
+(130,625 observations deleted)
 
 .         save "${mod_data}/fseries_seasonal_index.dta", replace
 (file /project/data/modified/fseries_seasonal_index.dta not found)
@@ -869,7 +869,7 @@ file /project/data/modified/fseries_seasonal_index.dta saved
 . preserve
 
 .         keep if periodicity_code==1
-(113,256 observations deleted)
+(114,522 observations deleted)
 
 .         save "${mod_data}/fseries_12month.dta", replace
 (file /project/data/modified/fseries_12month.dta not found)
@@ -957,13 +957,13 @@ end of do-file
 . preserve
 
 .         keep if id==${id_tc}
-(27,448 observations deleted)
+(27,756 observations deleted)
 
 .         sum value
 
     Variable |        Obs        Mean    Std. dev.       Min        Max
 -------------+---------------------------------------------------------
-       value |         88    2.839773    .8617731        1.4        5.1
+       value |         89    2.861798    .8816959        1.4        5.1
 
 .         local y = r(max)
 
@@ -987,7 +987,7 @@ v2 generated as str3
 (0 real changes made)
 
 .         replace marker2="" if time<${max_time}
-(88 real changes made)
+(89 real changes made)
 
 .         twoway   (line upper time if inrange(time, 164, 167), recast(area) co
 > lor(gs14)) (line upper time if inrange(time, 191, 197), recast(area) color(gs
@@ -1063,7 +1063,7 @@ file /project/Analysis/Output/eci_total_comp_allciv.xls saved
 . preserve
 
 .         keep if id==${id_tc}    
-(27,448 observations deleted)
+(27,756 observations deleted)
 
 .         label var value "Total Compensation"
 
@@ -1077,7 +1077,7 @@ file /project/Analysis/Output/eci_breakdown_all_civ.xls saved
 . preserve
 
 .         keep if id==${id_ws}
-(27,448 observations deleted)
+(27,756 observations deleted)
 
 .         label var value "Wages and Salaries"
 
@@ -1090,7 +1090,7 @@ file /project/Analysis/Output/eci_breakdown_all_civ.xls saved
 . preserve
 
 .         keep if id==${id_tb}
-(27,448 observations deleted)
+(27,756 observations deleted)
 
 .         label var value "Total Benefits"
 
@@ -1114,12 +1114,12 @@ file /project/Analysis/Output/eci_breakdown_all_civ.xls saved
 
 .         keep if owner==2 & area==99999 & estimate_code==1 & subcell==0 & ind=
 > =0
-(26,080 observations deleted)
+(26,375 observations deleted)
 
 .         keep if occupation_code==0 | occupation_code==112900 | occupation_cod
 > e==313900 | occupation_code==414300 | occupation_code==454900 | occupation_co
 > de==515300
-(928 observations deleted)
+(936 observations deleted)
 
 .         label define occ2 0 "All Workers" 112900 "Mgmt., Prof.,  Related" 313
 > 900 "Service" 414300 "Sales and Office" 454900 "Nat. Res., Constr., Maint." 5
@@ -1131,14 +1131,14 @@ file /project/Analysis/Output/eci_breakdown_all_civ.xls saved
 
            occupation_code |      Freq.     Percent        Cum.
 ---------------------------+-----------------------------------
-               All Workers |         88       16.67       16.67
-    Mgmt., Prof.,  Related |         88       16.67       33.33
-                   Service |         88       16.67       50.00
-          Sales and Office |         88       16.67       66.67
-Nat. Res., Constr., Maint. |         88       16.67       83.33
-Prod., Trans., Mat. Moving |         88       16.67      100.00
+               All Workers |         89       16.67       16.67
+    Mgmt., Prof.,  Related |         89       16.67       33.33
+                   Service |         89       16.67       50.00
+          Sales and Office |         89       16.67       66.67
+Nat. Res., Constr., Maint. |         89       16.67       83.33
+Prod., Trans., Mat. Moving |         89       16.67      100.00
 ---------------------------+-----------------------------------
-                     Total |        528      100.00
+                     Total |        534      100.00
 
 .         forvalues i=1(1)6 {
   2.                 local x1: variable label xocc_`i'
@@ -1149,7 +1149,7 @@ Prod., Trans., Mat. Moving |         88       16.67      100.00
 
     Variable |        Obs        Mean    Std. dev.       Min        Max
 -------------+---------------------------------------------------------
-       value |        528    2.868561    1.042164         .7          8
+       value |        534     2.89176    1.061349         .7          8
 
 .         local vmax=r(max)
 
@@ -1210,7 +1210,7 @@ file /project/Analysis/Output/eci_total_comp_allprivate.png written in PNG form
 
 Data                               Long   ->   Wide
 -----------------------------------------------------------------------------
-Number of observations              528   ->   88          
+Number of observations              534   ->   89          
 Number of variables                   3   ->   7           
 j variable (6 values)   occupation_code   ->   (dropped)
 xij variables:
@@ -1240,12 +1240,12 @@ file /project/Analysis/Output/eci_total_comp_allprivate.xls saved
 
 .         keep if owner==2 & area==99999 & estimate_code==2 & subcell==0 & ind=
 > =0
-(26,080 observations deleted)
+(26,375 observations deleted)
 
 .         keep if occupation_code==0 | occupation_code==112900 | occupation_cod
 > e==313900 | occupation_code==414300 | occupation_code==454900 | occupation_co
 > de==515300
-(928 observations deleted)
+(936 observations deleted)
 
 .         label define occ2 0 "All Workers" 112900 "Mgmt., Prof.,  Related" 313
 > 900 "Service" 414300 "Sales and Office" 454900 "Nat. Res., Constr., Maint." 5
@@ -1257,7 +1257,7 @@ file /project/Analysis/Output/eci_total_comp_allprivate.xls saved
 
     Variable |        Obs        Mean    Std. dev.       Min        Max
 -------------+---------------------------------------------------------
-       value |        528    2.772727    1.113917         .6        8.6
+       value |        534    2.800936    1.141351         .6        8.6
 
 .         local vmax=r(max)
 
@@ -1316,7 +1316,7 @@ file /project/Analysis/Output/eci_ws_allprivate.png written in PNG format
 
 Data                               Long   ->   Wide
 -----------------------------------------------------------------------------
-Number of observations              528   ->   88          
+Number of observations              534   ->   89          
 Number of variables                   3   ->   7           
 j variable (6 values)   occupation_code   ->   (dropped)
 xij variables:
@@ -1350,7 +1350,7 @@ file /project/Analysis/Output/eci_ws_allprivate.xls saved
 
 .         keep if owner==2 & area==99999 & estimate_code==2 & subcell==0 & ind=
 > =0
-(26,080 observations deleted)
+(26,375 observations deleted)
 
 .         bysort occ: gen N=_N
 
@@ -1361,24 +1361,24 @@ file /project/Analysis/Output/eci_ws_allprivate.xls saved
 
                         occupation_code |      Freq.     Percent        Cum.
 ----------------------------------------+-----------------------------------
-                            All workers |         88        6.47        6.47
-Management, business, and financial occ |         88        6.47       12.94
-Management, professional and related oc |         88        6.47       19.41
-   Professional and related occupations |         88        6.47       25.88
-                    Service occupations |         88        6.47       32.35
-          Sales and related occupations |         88        6.47       38.82
-           Sales and office occupations |         88        6.47       45.29
-Office and administrative support occup |         65        4.78       50.07
-Office and administrative support occup |         87        6.40       56.47
-Construction, and extraction, farming,  |         88        6.47       62.94
-Natural resources, construction, and ma |         88        6.47       69.41
-Installation, maintenance, and repair o |         88        6.47       75.88
-                 Production occupations |         88        6.47       82.35
-Production, transportation, and materia |         88        6.47       88.82
-Transportation and material moving occu |         65        4.78       93.60
-Transportation and material moving occu |         87        6.40      100.00
+                            All workers |         89        6.48        6.48
+Management, business, and financial occ |         89        6.48       12.95
+Management, professional and related oc |         89        6.48       19.43
+   Professional and related occupations |         89        6.48       25.91
+                    Service occupations |         89        6.48       32.39
+          Sales and related occupations |         89        6.48       38.86
+           Sales and office occupations |         89        6.48       45.34
+Office and administrative support occup |         66        4.80       50.15
+Office and administrative support occup |         87        6.33       56.48
+Construction, and extraction, farming,  |         89        6.48       62.95
+Natural resources, construction, and ma |         89        6.48       69.43
+Installation, maintenance, and repair o |         89        6.48       75.91
+                 Production occupations |         89        6.48       82.39
+Production, transportation, and materia |         89        6.48       88.86
+Transportation and material moving occu |         66        4.80       93.67
+Transportation and material moving occu |         87        6.33      100.00
 ----------------------------------------+-----------------------------------
-                                  Total |      1,360      100.00
+                                  Total |      1,374      100.00
 
 .         forvalues i=1(1)14 {
   2.                 local x1: variable label xocc_`i'
@@ -1393,7 +1393,7 @@ Transportation and material moving occu |         87        6.40      100.00
 
 Data                               Long   ->   Wide
 -----------------------------------------------------------------------------
-Number of observations            1,360   ->   88          
+Number of observations            1,374   ->   89          
 Number of variables                   3   ->   17          
 j variable (16 values)  occupation_code   ->   (dropped)
 xij variables:
@@ -1421,7 +1421,7 @@ file /project/Analysis/Output/eci_ws_allprivate_allocc.xls saved
 . preserve
 
 .         keep if area==99999 & estimate_code==1 & subcell==0 & ind==0 & occ==0
-(27,272 observations deleted)
+(27,578 observations deleted)
 
 .         keep series_title id time value owner recession
 
@@ -1436,7 +1436,7 @@ file /project/Analysis/Output/eci_ws_allprivate_allocc.xls saved
 
     Variable |        Obs        Mean    Std. dev.       Min        Max
 -------------+---------------------------------------------------------
-       value |        353    2.761495     1.18514   -1.38974   8.607625
+       value |        356    2.779557    1.196749   -1.38974   8.607625
 
 .         local vmax=r(max)
 
@@ -1449,7 +1449,7 @@ file /project/Analysis/Output/eci_ws_allprivate_allocc.xls saved
 (89 missing values generated)
 
 .         replace upper=`vmin' if upper==0
-(222 real changes made)
+(225 real changes made)
 
 .         sort time
 
@@ -1497,7 +1497,7 @@ file /project/Analysis/Output/eci_tc_allworkers.png written in PNG format
 
     Variable |        Obs        Mean    Std. dev.       Min        Max
 -------------+---------------------------------------------------------
-       value |        113    3.004723     1.41661   .5200377   8.607625
+       value |        116    3.053867    1.431553   .5200377   8.607625
 
 .         local vmax=r(max)
 
@@ -1510,7 +1510,7 @@ file /project/Analysis/Output/eci_tc_allworkers.png written in PNG format
 (89 missing values generated)
 
 .         replace upper=`vmin' if upper==0
-(222 real changes made)
+(225 real changes made)
 
 .         sort time
 
@@ -1558,7 +1558,7 @@ file /project/Analysis/Output/eci_tc_allworkers_recent.png written in PNG forma
 
 Data                               Long   ->   Wide
 -----------------------------------------------------------------------------
-Number of observations              353   ->   89          
+Number of observations              356   ->   89          
 Number of variables                   3   ->   5           
 j variable (4 values)        owner_code   ->   (dropped)
 xij variables:
@@ -1585,7 +1585,7 @@ file /project/Analysis/Output/eci_tc_allworkers.xls saved
 . preserve
 
 .         keep if area==99999 & estimate_code==3 & subcell==0 & ind==0 & occ==0
-(27,272 observations deleted)
+(27,578 observations deleted)
 
 .         keep series_title id time value owner recession
 
@@ -1600,7 +1600,7 @@ file /project/Analysis/Output/eci_tc_allworkers.xls saved
 
     Variable |        Obs        Mean    Std. dev.       Min        Max
 -------------+---------------------------------------------------------
-       value |        353    3.212769    1.630632   -1.38974   8.607625
+       value |        356    3.225063    1.629828   -1.38974   8.607625
 
 .         local vmax=r(max)
 
@@ -1613,7 +1613,7 @@ file /project/Analysis/Output/eci_tc_allworkers.xls saved
 (89 missing values generated)
 
 .         replace upper=`vmin' if upper==0
-(222 real changes made)
+(225 real changes made)
 
 .         sort time
 
@@ -1661,7 +1661,7 @@ file /project/Analysis/Output/eci_tb_allworkers.png written in PNG format
 
     Variable |        Obs        Mean    Std. dev.       Min        Max
 -------------+---------------------------------------------------------
-       value |        113    2.929502    1.438535   .5200377   8.607625
+       value |        116    2.974556    1.448706   .5200377   8.607625
 
 .         local vmax=r(max)
 
@@ -1674,7 +1674,7 @@ file /project/Analysis/Output/eci_tb_allworkers.png written in PNG format
 (89 missing values generated)
 
 .         replace upper=`vmin' if upper==0
-(222 real changes made)
+(225 real changes made)
 
 .         sort time
 
@@ -1721,7 +1721,7 @@ file /project/Analysis/Output/eci_tb_allworkers_recent.pdf saved as PDF
 
 Data                               Long   ->   Wide
 -----------------------------------------------------------------------------
-Number of observations              353   ->   89          
+Number of observations              356   ->   89          
 Number of variables                   3   ->   5           
 j variable (4 values)        owner_code   ->   (dropped)
 xij variables:
@@ -1748,10 +1748,10 @@ file /project/Analysis/Output/eci_tb_allworkers.xls saved
 . preserve
 
 .         keep if owner==2 & estimate_code==1 & subcell==0 & ind==0 & occ==0 
-(25,498 observations deleted)
+(25,778 observations deleted)
 
 .         keep if area>=99100 & area<=99190
-(1,426 observations deleted)
+(1,446 observations deleted)
 
 .         label define area2 99100 "New England" 99120 "Middle Atlantic" 99130 
 > "East South Central" 99140 "South Atlantic" 99150 "East North Central" 99160 
@@ -1764,7 +1764,7 @@ file /project/Analysis/Output/eci_tb_allworkers.xls saved
 
     Variable |        Obs        Mean    Std. dev.       Min        Max
 -------------+---------------------------------------------------------
-       value |        585    2.587009    1.061565         .2        7.5
+       value |        594    2.618687    1.086125         .2        7.5
 
 .         local vmax=r(max)
 
@@ -1831,17 +1831,17 @@ file /project/Analysis/Output/eci_tc_regions.png written in PNG format
 
          area_code |      Freq.     Percent        Cum.
 -------------------+-----------------------------------
-       New England |         68       11.11       11.11
-   Middle Atlantic |         68       11.11       22.22
-East South Central |         68       11.11       33.33
-    South Atlantic |         68       11.11       44.44
-East North Central |         68       11.11       55.56
-West North Central |         68       11.11       66.67
-West South Central |         68       11.11       77.78
-          Mountain |         68       11.11       88.89
-           Pacific |         68       11.11      100.00
+       New England |         69       11.11       11.11
+   Middle Atlantic |         69       11.11       22.22
+East South Central |         69       11.11       33.33
+    South Atlantic |         69       11.11       44.44
+East North Central |         69       11.11       55.56
+West North Central |         69       11.11       66.67
+West South Central |         69       11.11       77.78
+          Mountain |         69       11.11       88.89
+           Pacific |         69       11.11      100.00
 -------------------+-----------------------------------
-             Total |        612      100.00
+             Total |        621      100.00
 
 .         forvalues i=1(1)9 {
   2.                 local x1: variable label xarea_`i'
@@ -1855,7 +1855,7 @@ West South Central |         68       11.11       77.78
 
 Data                               Long   ->   Wide
 -----------------------------------------------------------------------------
-Number of observations              612   ->   68          
+Number of observations              621   ->   69          
 Number of variables                   3   ->   10          
 j variable (9 values)         area_code   ->   (dropped)
 xij variables:
@@ -1883,9 +1883,9 @@ end of do-file
 . 
 . log close
       name:  <unnamed>
-       log:  /project/Analysis/Log_Files/ecec_2023_04_11.log
+       log:  /project/Analysis/Log_Files/ecec_2023_04_28.log
   log type:  text
- closed on:  11 Apr 2023, 20:56:48
+ closed on:  28 Apr 2023, 12:34:42
 -------------------------------------------------------------------------------
 
 . 
